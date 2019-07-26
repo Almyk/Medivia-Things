@@ -8,6 +8,7 @@ const prophecy = 3;
 const strife = 4;
 
 const serverNames = ['Destiny', 'Legacy', 'Pendulum', 'Prophecy', 'Strife'];
+List<int> onlineCounts = [0,0,0,0,0];
 
 int server = pendulum;
 
@@ -41,6 +42,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        bottom: PreferredSize(
+          child: Text(
+            serverNames[server],
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold),
+          ),
+          preferredSize: null,
+        ),
       ),
       body: _buildBody(context),
       drawer: _createDrawer(),
@@ -65,6 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
   
   Widget _buildOnlineList(BuildContext context, List<DocumentSnapshot> snapshot) {
     // TODO: update drawer with online counts
+    for(var i = 0 ; i < 5 ; i++) {
+      onlineCounts[i] = snapshot[i].data['players'].length;
+    }
     return ListView(
       padding: const EdgeInsets.only(top: 5.0),
       children: _buildOnlineListItems(context, snapshot[server]),
@@ -74,16 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _buildOnlineListItems(BuildContext context, DocumentSnapshot data) {
     List<dynamic> players = data.data['players'];
     List<Widget> onlineList = new List<Widget>();
-
-    onlineList.add(
-        Text(
-          serverNames[server],
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-          ),
-        ));
 
     for(final player in players) {
       onlineList.add(_buildOnlineListItem(context, Map<String, dynamic>.from(player)));
@@ -104,8 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: ListTile(
           title: Text(record.name),
-          trailing: Text("lv: " + record.level.toString()),
-          subtitle: Text("Last login: " + record.login + ", " + record.vocation),
+          trailing: Text("Last login: " + record.login),
+          subtitle: Text("Lv: " + record.level.toString() + ", " + record.vocation),
           onTap: () => print(record),
         ),
       ),
@@ -125,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
-            title: Text('Destiny'),
+            title: Text('Destiny' + ' (${onlineCounts[destiny]})'),
             onTap: () {
               setState(() {
                 server = destiny;
@@ -134,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            title: Text('Legacy'),
+            title: Text('Legacy' + ' (${onlineCounts[legacy]})'),
             onTap: () {
               setState(() {
                 server = legacy;
@@ -143,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            title: Text('Pendulum'),
+            title: Text('Pendulum' + ' (${onlineCounts[pendulum]})'),
             onTap: () {
               setState(() {
                 server = pendulum;
@@ -152,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            title: Text('Prophecy'),
+            title: Text('Prophecy' + ' (${onlineCounts[prophecy]})'),
             onTap: () {
               setState(() {
                 server = prophecy;
@@ -161,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            title: Text('Strife'),
+            title: Text('Strife' + ' (${onlineCounts[strife]})'),
             onTap: () {
               setState(() {
                 server = strife;
