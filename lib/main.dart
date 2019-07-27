@@ -8,9 +8,6 @@ const prophecy = 3;
 const strife = 4;
 
 const serverNames = ['Destiny', 'Legacy', 'Pendulum', 'Prophecy', 'Strife'];
-List<int> onlineCounts = [0,0,0,0,0];
-
-int server = pendulum;
 
 void main() => runApp(MyApp());
 
@@ -37,19 +34,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _server = pendulum;
+  List<int> _onlineCounts = [0, 0, 0, 0, 0];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        bottom: PreferredSize(
-          child: Text(
-            serverNames[server],
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold),
-          ),
-          preferredSize: null,
+        title: Column(
+          children: <Widget>[
+            Container(child: Text(widget.title), padding: EdgeInsets.symmetric(vertical: 4.0),),
+            Text(
+              serverNames[_server] + ' (${_onlineCounts[_server].toString()})',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ],
         ),
       ),
       body: _buildBody(context),
@@ -58,9 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return Container(
-        child: _buildOnline(context)
-    );
+    return Container(child: _buildOnline(context));
   }
 
   Widget _buildOnline(BuildContext context) {
@@ -72,43 +69,45 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-  
-  Widget _buildOnlineList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    // TODO: update drawer with online counts
-    for(var i = 0 ; i < 5 ; i++) {
-      onlineCounts[i] = snapshot[i].data['players'].length;
+
+  Widget _buildOnlineList(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
+    for (var i = 0; i < 5; i++) {
+      _onlineCounts[i] = snapshot[i].data['players'].length;
     }
     return ListView(
       padding: const EdgeInsets.only(top: 5.0),
-      children: _buildOnlineListItems(context, snapshot[server]),
+      children: _buildOnlineListItems(context, snapshot[_server]),
     );
   }
 
-  List<Widget> _buildOnlineListItems(BuildContext context, DocumentSnapshot data) {
+  List<Widget> _buildOnlineListItems(
+      BuildContext context, DocumentSnapshot data) {
     List<dynamic> players = data.data['players'];
     List<Widget> onlineList = new List<Widget>();
 
-    for(final player in players) {
-      onlineList.add(_buildOnlineListItem(context, Map<String, dynamic>.from(player)));
+    for (final player in players) {
+      onlineList.add(
+          _buildOnlineListItem(context, Map<String, dynamic>.from(player)));
     }
     return onlineList;
   }
 
   Widget _buildOnlineListItem(BuildContext context, Map<String, dynamic> data) {
     final record = Record.fromMap(data);
-    
+
     return Padding(
       key: ValueKey(record.name),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0)
-        ),
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
           title: Text(record.name),
-          trailing: Text("Last login: " + record.login),
-          subtitle: Text("Lv: " + record.level.toString() + ", " + record.vocation),
+          trailing: Text(record.login),
+          subtitle:
+              Text("Lv: " + record.level.toString() + ", " + record.vocation),
           onTap: () => print(record),
         ),
       ),
@@ -128,46 +127,46 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
-            title: Text('Destiny' + ' (${onlineCounts[destiny]})'),
+            title: Text('Destiny' + ' (${_onlineCounts[destiny]})'),
             onTap: () {
               setState(() {
-                server = destiny;
+                _server = destiny;
               });
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Legacy' + ' (${onlineCounts[legacy]})'),
+            title: Text('Legacy' + ' (${_onlineCounts[legacy]})'),
             onTap: () {
               setState(() {
-                server = legacy;
+                _server = legacy;
               });
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Pendulum' + ' (${onlineCounts[pendulum]})'),
+            title: Text('Pendulum' + ' (${_onlineCounts[pendulum]})'),
             onTap: () {
               setState(() {
-                server = pendulum;
+                _server = pendulum;
               });
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Prophecy' + ' (${onlineCounts[prophecy]})'),
+            title: Text('Prophecy' + ' (${_onlineCounts[prophecy]})'),
             onTap: () {
               setState(() {
-                server = prophecy;
+                _server = prophecy;
               });
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text('Strife' + ' (${onlineCounts[strife]})'),
+            title: Text('Strife' + ' (${_onlineCounts[strife]})'),
             onTap: () {
               setState(() {
-                server = strife;
+                _server = strife;
               });
               Navigator.pop(context);
             },
@@ -199,5 +198,5 @@ class Record {
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   @override
-  String toString() => "Record<$name:$level>";
+  String toString() => "Record<$name:$level:$vocation:$login>";
 }
