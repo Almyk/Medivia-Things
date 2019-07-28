@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const destiny = 0;
@@ -72,9 +73,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildOnlineList(
       BuildContext context, List<DocumentSnapshot> snapshot) {
+    bool dataChanged = false;
     for (var i = 0; i < 5; i++) {
-      _onlineCounts[i] = snapshot[i].data['players'].length;
+      int temp = snapshot[i].data['players'].length;
+      if(temp != _onlineCounts[i]) {
+        _onlineCounts[i] = temp;
+        dataChanged = true;
+      }
     }
+
+    if(dataChanged) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    }
+
     return ListView(
       padding: const EdgeInsets.only(top: 5.0),
       children: _buildOnlineListItems(context, snapshot[_server]),
@@ -108,7 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
           trailing: Text(record.login),
           subtitle:
               Text("Lv: " + record.level.toString() + ", " + record.vocation),
-          onTap: () => print(record),
+          onTap: () {
+            print(record.toString());
+          },
         ),
       ),
     );
