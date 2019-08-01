@@ -44,10 +44,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Column(
           children: <Widget>[
-            Container(child: Text(widget.title), padding: EdgeInsets.symmetric(vertical: 4.0),),
+            Container(
+              child: Text(widget.title),
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+            ),
             Text(
               serverNames[_server] + ' (${_onlineCounts[_server].toString()})',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
           ],
         ),
@@ -76,13 +82,13 @@ class _MyHomePageState extends State<MyHomePage> {
     bool dataChanged = false;
     for (var i = 0; i < 5; i++) {
       int temp = snapshot[i].data['players'].length;
-      if(temp != _onlineCounts[i]) {
+      if (temp != _onlineCounts[i]) {
         _onlineCounts[i] = temp;
         dataChanged = true;
       }
     }
 
-    if(dataChanged) {
+    if (dataChanged) {
       SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
     }
 
