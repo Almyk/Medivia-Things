@@ -41,30 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
   int _server = pendulum;
   List<int> _onlineCounts = [0, 0, 0, 0, 0];
 
-  Timer timer;
-
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 20), (Timer t) => test());
   }
 
   @override
   void dispose() {
     super.dispose();
-    timer?.cancel();
-  }
-
-  void test() async{
-    var url = 'http://almy.iptime.org:5000/medivia/online/';
-    List<Map<String, dynamic>> onlineLists = new List(5);
-    for(int i = 0; i < 5; i++) {
-      var response = await http.get(url + serverNames[i].toLowerCase());
-      Map onlineList = json.decode(response.body);
-      onlineLists[i] = onlineList;
-      print(serverNames[i] + ": ${onlineList['players'].length}");
-      print(onlineList);
-    }
   }
 
   Stream<List<Map<String, dynamic>>> getOnlineLists() async*{
@@ -114,20 +98,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildOnline(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('online').snapshots(),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: getOnlineLists(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildOnlineList(context, snapshot.data.documents);
+        return _buildOnlineList(context, snapshot.data);
       },
     );
   }
 
   Widget _buildOnlineList(
-      BuildContext context, List<DocumentSnapshot> snapshot) {
+      BuildContext context, List<Map<String, dynamic>> snapshot) {
     bool dataChanged = false;
     for (var i = 0; i < 5; i++) {
-      int temp = snapshot[i].data['players'].length;
+      int temp = snapshot[i]['players'].length;
       if (temp != _onlineCounts[i]) {
         _onlineCounts[i] = temp;
         dataChanged = true;
@@ -145,8 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> _buildOnlineListItems(
-      BuildContext context, DocumentSnapshot data) {
-    List<dynamic> players = data.data['players'];
+      BuildContext context, Map<String, dynamic> data) {
+    List<dynamic> players = data['players'];
     List<Widget> onlineList = new List<Widget>();
 
     for (final player in players) {
