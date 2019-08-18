@@ -12,6 +12,7 @@ const prophecy = 3;
 const strife = 4;
 
 const serverNames = ['Destiny', 'Legacy', 'Pendulum', 'Prophecy', 'Strife'];
+const onlineUrl = 'http://almy.iptime.org:5000/medivia/online/';
 
 void main() => runApp(MyApp());
 
@@ -52,16 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Stream<List<Map<String, dynamic>>> getOnlineLists() async*{
-    var url = 'http://almy.iptime.org:5000/medivia/online/';
     List<Map<String, dynamic>> onlineLists = new List(5);
     while (true) {
       for(int i = 0; i < 5; i++) {
-        var response = await http.get(url + serverNames[i].toLowerCase());
+        var response = await http.get(onlineUrl + serverNames[i].toLowerCase());
         Map onlineList = json.decode(response.body);
         onlineLists[i] = onlineList;
       }
       yield onlineLists;
-      await Future.delayed(const Duration(minutes: 1));
+      await Future.delayed(const Duration(seconds: 40));
     }
   }
 
