@@ -59,8 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
         var response = await http.get(url + serverNames[i].toLowerCase());
         Map onlineList = json.decode(response.body);
         onlineLists[i] = onlineList;
-        print(serverNames[i] + ": ${onlineList.length}");
-        print(onlineList);
       }
       yield onlineLists;
       await Future.delayed(const Duration(minutes: 1));
