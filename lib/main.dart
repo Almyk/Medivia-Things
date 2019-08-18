@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 const destiny = 0;
 const legacy = 1;
@@ -37,6 +40,49 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _server = pendulum;
   List<int> _onlineCounts = [0, 0, 0, 0, 0];
+
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 20), (Timer t) => test());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+  }
+
+  void test() async{
+    var url = 'http://almy.iptime.org:5000/medivia/online/';
+    List<Map<String, dynamic>> onlineLists = new List(5);
+    for(int i = 0; i < 5; i++) {
+      var response = await http.get(url + serverNames[i].toLowerCase());
+      Map onlineList = json.decode(response.body);
+      onlineLists[i] = onlineList;
+      print(serverNames[i] + ": ${onlineList['players'].length}");
+      print(onlineList);
+    }
+  }
+
+  Stream<List<Map<String, dynamic>>> getOnlineLists() async*{
+    var url = 'http://almy.iptime.org:5000/medivia/online/';
+    List<Map<String, dynamic>> onlineLists = new List(5);
+    while (true) {
+      for(int i = 0; i < 5; i++) {
+        var response = await http.get(url + serverNames[i].toLowerCase());
+        Map onlineList = json.decode(response.body);
+        onlineLists[i] = onlineList;
+        print(serverNames[i] + ": ${onlineList.length}");
+        print(onlineList);
+      }
+      yield onlineLists;
+      await Future.delayed(const Duration(minutes: 1));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
