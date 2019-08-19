@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -167,10 +166,13 @@ class _MyHomePageState extends State<MyHomePage> {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text('Medivia Things'),
-            decoration: BoxDecoration(
-              color: Colors.blue,
+          Container(
+            height: 80.0,
+            child: DrawerHeader(
+              child: Text('Medivia Things'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
             ),
           ),
           ListTile(
@@ -229,9 +231,8 @@ class Record {
   final int level;
   final String vocation;
   final String login;
-  final DocumentReference reference;
 
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
+  Record.fromMap(Map<String, dynamic> map)
       : assert(map['name'] != null),
         assert(map['level'] != null),
         assert(map['vocation'] != null),
@@ -240,9 +241,6 @@ class Record {
         level = map['level'],
         vocation = map['vocation'],
         login = map['login'];
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   @override
   String toString() => "Record<$name:$level:$vocation:$login>";
