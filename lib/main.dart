@@ -51,10 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  Stream<List<Map<String, dynamic>>> getOnlineLists() async*{
+  Stream<List<Map<String, dynamic>>> getOnlineLists() async* {
     List<Map<String, dynamic>> onlineLists = new List(5);
     while (true) {
-      for(int i = 0; i < 5; i++) {
+      for (int i = 0; i < 5; i++) {
         var response = await http.get(onlineUrl + serverNames[i].toLowerCase());
         Map onlineList = json.decode(response.body);
         onlineLists[i] = onlineList;
@@ -63,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
       await Future.delayed(const Duration(seconds: 40));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -169,56 +168,83 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             height: 80.0,
             child: DrawerHeader(
-              child: Text('Medivia Things'),
+              child: Text('Medivia Things',
+                      style: TextStyle(fontSize: 18.0),),
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
             ),
           ),
-          ListTile(
-            title: Text('Destiny' + ' (${_onlineCounts[destiny]})'),
-            onTap: () {
-              setState(() {
-                _server = destiny;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: Text('Legacy' + ' (${_onlineCounts[legacy]})'),
-            onTap: () {
-              setState(() {
-                _server = legacy;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: Text('Pendulum' + ' (${_onlineCounts[pendulum]})'),
-            onTap: () {
-              setState(() {
-                _server = pendulum;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: Text('Prophecy' + ' (${_onlineCounts[prophecy]})'),
-            onTap: () {
-              setState(() {
-                _server = prophecy;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: Text('Strife' + ' (${_onlineCounts[strife]})'),
-            onTap: () {
-              setState(() {
-                _server = strife;
-              });
-              Navigator.pop(context);
-            },
+          Center(
+              child: Text(
+            'ONLINE',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, fontFamily: "Times"),
+          )),
+          Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(color: Colors.grey),
+                    bottom: BorderSide(color: Colors.grey))),
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 24.0),
+                  title: Text('Destiny' + ' (${_onlineCounts[destiny]})',
+                            style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  onTap: () {
+                    setState(() {
+                      _server = destiny;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 24.0),
+                  title: Text('Legacy' + ' (${_onlineCounts[legacy]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  onTap: () {
+                    setState(() {
+                      _server = legacy;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 24.0),
+                  title: Text('Pendulum' + ' (${_onlineCounts[pendulum]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  onTap: () {
+                    setState(() {
+                      _server = pendulum;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 24.0),
+                  title: Text('Prophecy' + ' (${_onlineCounts[prophecy]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  onTap: () {
+                    setState(() {
+                      _server = prophecy;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 24.0),
+                  title: Text(
+                      'Strife' + ' (${_onlineCounts[strife]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  onTap: () {
+                    setState(() {
+                      _server = strife;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
