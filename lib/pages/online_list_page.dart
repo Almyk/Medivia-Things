@@ -59,8 +59,10 @@ class OnlineListPage extends StatelessWidget {
       onlineList.add(
           _buildOnlineListItem(context, Map<String, dynamic>.from(player)));
     }
-    return ListView(
-      children: onlineList,
+    return Scrollbar(
+      child: ListView(
+        children: onlineList,
+      ),
     );
   }
 
