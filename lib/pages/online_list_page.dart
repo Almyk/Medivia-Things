@@ -5,7 +5,7 @@ import 'package:medivia_things/bloc/event/online_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/constants.dart';
 
-import 'bloc/blocs/navigation_bloc.dart';
+import '../bloc/blocs/navigation_bloc.dart';
 
 class OnlineListPage extends StatelessWidget {
   OnlineListPage(

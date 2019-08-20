@@ -6,9 +6,9 @@ import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/event/navigation_state.dart';
 import 'package:medivia_things/repository/repository.dart';
-import 'package:medivia_things/vip_list_page.dart';
+import 'package:medivia_things/pages/vip_list_page.dart';
 
-import 'online_list_page.dart';
+import 'pages/online_list_page.dart';
 
 
 class MyBlocDelegate extends BlocDelegate {
