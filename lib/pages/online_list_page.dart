@@ -4,6 +4,7 @@ import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/event/online_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/constants.dart';
+import 'package:medivia_things/utils/drawer.dart';
 
 import '../bloc/blocs/navigation_bloc.dart';
 
@@ -24,6 +25,7 @@ class OnlineListPage extends StatelessWidget {
       bloc: onlineBloc,
       builder: (BuildContext context, OnlineState state) {
         return Scaffold(
+          drawer: MyDrawer(repository: repository,),
           appBar: AppBar(
             title: Column(
               children: <Widget>[
@@ -143,93 +145,6 @@ class OnlineListPage extends StatelessWidget {
 //            print(record.toString());
 //          },
 //        ),
-//      ),
-//    );
-//  }
-//
-//  Widget _createDrawer() {
-//    final NavigationBloc navigationBloc = BlocProvider.of<NavigationBloc>(context);
-//    return Drawer(
-//      child: ListView(
-//        // Important: Remove any padding from the ListView.
-//        padding: EdgeInsets.zero,
-//        children: <Widget>[
-//          Container(
-//            height: 80.0,
-//            child: DrawerHeader(
-//              child: Text('Medivia Things',
-//                style: TextStyle(fontSize: 18.0),),
-//              decoration: BoxDecoration(
-//                color: Colors.blue,
-//              ),
-//            ),
-//          ),
-//          ListTile(
-//            title: Text("Vip List"),
-//            onTap: () => navigationBloc.dispatch(ShowVipList()),
-//          ),
-//          Center(
-//              child: Text(
-//                'ONLINE',
-//                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, fontFamily: "Times"),
-//              )),
-//          Container(
-//            decoration: BoxDecoration(
-//                border: Border(
-//                    top: BorderSide(color: Colors.grey),
-//                    bottom: BorderSide(color: Colors.grey))),
-//            child: Column(
-//              children: <Widget>[
-//                ListTile(
-//                  contentPadding: EdgeInsets.only(left: 24.0),
-//                  title: Text('Destiny' + ' (${_onlineCounts[destiny]})',
-//                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-//                  onTap: () {
-//                    navigationBloc.dispatch(ShowOnlineDestiny());
-//                    Navigator.pop(context);
-//                  },
-//                ),
-//                ListTile(
-//                  contentPadding: EdgeInsets.only(left: 24.0),
-//                  title: Text('Legacy' + ' (${_onlineCounts[legacy]})',
-//                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-//                  onTap: () {
-//                    navigationBloc.dispatch(ShowOnlineLegacy());
-//                    Navigator.pop(context);
-//                  },
-//                ),
-//                ListTile(
-//                  contentPadding: EdgeInsets.only(left: 24.0),
-//                  title: Text('Pendulum' + ' (${_onlineCounts[pendulum]})',
-//                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-//                  onTap: () {
-//                    navigationBloc.dispatch(ShowOnlinePendulum());
-//                    Navigator.pop(context);
-//                  },
-//                ),
-//                ListTile(
-//                  contentPadding: EdgeInsets.only(left: 24.0),
-//                  title: Text('Prophecy' + ' (${_onlineCounts[prophecy]})',
-//                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-//                  onTap: () {
-//                    navigationBloc.dispatch(ShowOnlineProphecy());
-//                    Navigator.pop(context);
-//                  },
-//                ),
-//                ListTile(
-//                  contentPadding: EdgeInsets.only(left: 24.0),
-//                  title: Text(
-//                    'Strife' + ' (${_onlineCounts[strife]})',
-//                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-//                  onTap: () {
-//                    navigationBloc.dispatch(ShowOnlineStrife());
-//                    Navigator.pop(context);
-//                  },
-//                ),
-//              ],
-//            ),
-//          ),
-//        ],
 //      ),
 //    );
 //  }

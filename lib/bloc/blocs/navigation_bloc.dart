@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:medivia_things/bloc/event/navigation_state.dart';
 import 'package:medivia_things/bloc/state/navigation_event.dart';
-import 'package:medivia_things/utils/constants.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   @override
@@ -13,19 +12,19 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       yield VipList();
     }
     if (event is ShowOnlineDestiny) {
-      yield OnlineList(server: destiny);
+      yield OnlineListDestiny();
     }
     if (event is ShowOnlineLegacy) {
-      yield OnlineList(server: legacy);
+      yield OnlineListLegacy();
     }
     if (event is ShowOnlinePendulum) {
-      yield OnlineList(server: pendulum);
+      yield OnlineListPendulum();
     }
     if (event is ShowOnlineProphecy) {
-      yield OnlineList(server: prophecy);
+      yield OnlineListProphecy();
     }
     if (event is ShowOnlineStrife) {
-      yield OnlineList(server: strife);
+      yield OnlineListStrife();
     }
   }
 

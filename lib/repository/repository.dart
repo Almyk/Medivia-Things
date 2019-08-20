@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/state/online_event.dart';
 import 'package:medivia_things/utils/constants.dart';
 
 class Repository {
   OnlineBloc onlineBloc;
+  NavigationBloc navigationBloc;
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
 

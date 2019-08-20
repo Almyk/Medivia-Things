@@ -7,6 +7,7 @@ import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/event/navigation_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/pages/vip_list_page.dart';
+import 'package:medivia_things/utils/drawer.dart';
 
 import 'pages/online_list_page.dart';
 
@@ -34,11 +35,16 @@ class MyBlocDelegate extends BlocDelegate {
 void main() {
   BlocSupervisor.delegate = MyBlocDelegate();
   final repository = Repository()..init();
+  final MyDrawer drawer = MyDrawer(repository: repository,);
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<NavigationBloc>(
-          builder: (BuildContext context) => NavigationBloc(),
+          builder: (BuildContext context) {
+            final NavigationBloc navigationBloc = NavigationBloc();
+            repository.navigationBloc = navigationBloc;
+            return navigationBloc;
+          },
         ),
         BlocProvider<OnlineBloc>(
           builder: (BuildContext context) {
@@ -48,15 +54,16 @@ void main() {
           },
         ),
       ],
-      child: MyApp(repository: repository),
+      child: MyApp(repository: repository, drawer: drawer,),
     )
   );
 }
 
 class MyApp extends StatelessWidget {
   final Repository repository;
+  final MyDrawer drawer;
   
-  MyApp({Key key, @required this.repository}) : super(key: key);
+  MyApp({Key key, @required this.repository, this.drawer}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
