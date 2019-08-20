@@ -1,43 +1,94 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const destiny = 0;
-const legacy = 1;
-const pendulum = 2;
-const prophecy = 3;
-const strife = 4;
+import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
+import 'package:medivia_things/bloc/event/navigation_state.dart';
+import 'package:medivia_things/bloc/state/navigation_event.dart';
+import 'package:medivia_things/repository/repository.dart';
+import 'package:medivia_things/utils/constants.dart';
+import 'package:medivia_things/vip_list_page.dart';
 
-const serverNames = ['Destiny', 'Legacy', 'Pendulum', 'Prophecy', 'Strife'];
-const onlineUrl = 'http://almy.iptime.org:5000/medivia/online/';
 
-void main() => runApp(MyApp());
+class MyBlocDelegate extends BlocDelegate {
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition);
+  }
+
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print("Event: $event");
+  }
+
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+    super.onError(bloc, error, stacktrace);
+    print(error);
+  }
+}
+
+void main() {
+  BlocSupervisor.delegate = MyBlocDelegate();
+  final repository = Repository();
+  runApp(
+    BlocProvider<NavigationBloc>(
+      builder: (context) {
+        return NavigationBloc();
+      },
+      child: MyApp(repository: repository),
+    )
+  );
+}
 
 class MyApp extends StatelessWidget {
+  final Repository repository;
+  
+  MyApp({Key key, @required this.repository}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final NavigationBloc navigationBloc = BlocProvider.of<NavigationBloc>(context);
     return MaterialApp(
       title: 'Medivia Things',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Medivia Things'),
+      home: BlocBuilder<NavigationBloc, NavigationState>(
+        bloc: navigationBloc,
+        builder: (BuildContext context, NavigationState state) {
+          if (state is OnlineList) {
+            return OnlineListPage(
+                title: "Medivia Things",
+                server: state.server,
+            );
+          }
+          else {
+            return VipListPage(title: "Medivia Things", navigationBloc: navigationBloc,);
+          }
+        },
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class OnlineListPage extends StatefulWidget {
+  OnlineListPage({Key key, this.title, this.server}) : super(key: key);
 
   final String title;
+  final int server;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _OnlineListPageState createState() => _OnlineListPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _OnlineListPageState extends State<OnlineListPage> {
   int _server = pendulum;
   List<int> _onlineCounts = [0, 0, 0, 0, 0];
 
@@ -174,6 +225,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
               ),
             ),
+          ),
+          ListTile(
+            title: Text("Vip List"),
+            onTap: () => BlocProvider.of<NavigationBloc>(context).dispatch(ShowVipList()),
           ),
           Center(
               child: Text(
