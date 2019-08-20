@@ -29,7 +29,8 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text("Vip List"),
+            title: Text('Vip List',
+              style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
             onTap: () => navigationBloc.dispatch(ShowVipList()),
           ),
           Center(
