@@ -1,14 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medivia_things/repository/repository.dart';
 
 import 'bloc/blocs/navigation_bloc.dart';
 import 'bloc/state/navigation_event.dart';
 
 class VipListPage extends StatelessWidget {
-  VipListPage({Key key, this.title, this.navigationBloc}) : super(key: key);
+  VipListPage({Key key, this.title, this.navigationBloc, this.repository}) : super(key: key);
 
   final String title;
   final NavigationBloc navigationBloc;
+  final Repository repository;
 
   @override
   Widget build(BuildContext context) {

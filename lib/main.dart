@@ -1,16 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
+import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/event/navigation_state.dart';
-import 'package:medivia_things/bloc/state/navigation_event.dart';
 import 'package:medivia_things/repository/repository.dart';
-import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/vip_list_page.dart';
 
 import 'online_list_page.dart';
@@ -38,12 +33,21 @@ class MyBlocDelegate extends BlocDelegate {
 
 void main() {
   BlocSupervisor.delegate = MyBlocDelegate();
-  final repository = Repository();
+  final repository = Repository()..init();
   runApp(
-    BlocProvider<NavigationBloc>(
-      builder: (context) {
-        return NavigationBloc();
-      },
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<NavigationBloc>(
+          builder: (BuildContext context) => NavigationBloc(),
+        ),
+        BlocProvider<OnlineBloc>(
+          builder: (BuildContext context) {
+            final OnlineBloc onlineBloc = OnlineBloc();
+            repository.onlineBloc = onlineBloc;
+            return onlineBloc;
+          },
+        ),
+      ],
       child: MyApp(repository: repository),
     )
   );
@@ -69,12 +73,15 @@ class MyApp extends StatelessWidget {
             return OnlineListPage(
                 title: "Medivia Things",
                 server: state.server,
+                navigationBloc: navigationBloc,
+                repository: repository,
             );
           }
           else {
             return VipListPage(
               title: "Medivia Things",
               navigationBloc: navigationBloc,
+              repository: repository,
             );
           }
         },

@@ -9,11 +9,23 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   @override
   Stream<NavigationState> mapEventToState(NavigationEvent event) async*{
+    if (event is ShowVipList) {
+      yield VipList();
+    }
     if (event is ShowOnlineDestiny) {
       yield OnlineList(server: destiny);
     }
-    if (event is ShowVipList) {
-      yield VipList();
+    if (event is ShowOnlineLegacy) {
+      yield OnlineList(server: legacy);
+    }
+    if (event is ShowOnlinePendulum) {
+      yield OnlineList(server: pendulum);
+    }
+    if (event is ShowOnlineProphecy) {
+      yield OnlineList(server: prophecy);
+    }
+    if (event is ShowOnlineStrife) {
+      yield OnlineList(server: strife);
     }
   }
 
