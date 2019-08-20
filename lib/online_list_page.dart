@@ -5,10 +5,10 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:medivia_things/utils/utilities.dart';
 
 import 'bloc/blocs/navigation_bloc.dart';
 import 'bloc/state/navigation_event.dart';
-import 'main.dart';
 
 class OnlineListPage extends StatefulWidget {
   OnlineListPage({Key key, this.title, this.server}) : super(key: key);
