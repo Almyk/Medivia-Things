@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
-import 'package:medivia_things/bloc/event/online_state.dart';
+import 'package:medivia_things/bloc/state/online_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/utils/drawer.dart';
@@ -67,7 +67,7 @@ class OnlineListPage extends StatelessWidget {
   }
 
   Widget _buildOnlineListItem(BuildContext context, Map<String, dynamic> data) {
-    final record = Record.fromMap(data);
+    final record = OnlinePlayer.fromMap(data);
 
     return Padding(
       key: ValueKey(record.name),

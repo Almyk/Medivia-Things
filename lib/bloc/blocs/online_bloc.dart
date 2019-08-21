@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:medivia_things/bloc/event/online_state.dart';
-import 'package:medivia_things/bloc/state/online_event.dart';
+import 'package:medivia_things/bloc/state/online_state.dart';
+import 'package:medivia_things/bloc/event/online_event.dart';
 import 'dart:async';
 
 class OnlineBloc extends Bloc<OnlineEvent, OnlineState> {

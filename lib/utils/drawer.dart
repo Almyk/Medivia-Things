@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
-import 'package:medivia_things/bloc/state/navigation_event.dart';
+import 'package:medivia_things/bloc/event/navigation_event.dart';
 import 'package:medivia_things/repository/repository.dart';
 
 import 'constants.dart';

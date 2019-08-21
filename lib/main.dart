@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
-import 'package:medivia_things/bloc/event/navigation_state.dart';
+import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
+import 'package:medivia_things/bloc/state/navigation_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/pages/vip_list_page.dart';
 import 'package:medivia_things/utils/drawer.dart';
@@ -51,6 +52,13 @@ void main() {
             final OnlineBloc onlineBloc = OnlineBloc();
             repository.onlineBloc = onlineBloc;
             return onlineBloc;
+          },
+        ),
+        BlocProvider<VipBloc>(
+          builder: (BuildContext context) {
+            final vipBloc = VipBloc(repository: repository);
+            repository.vipBloc = vipBloc;
+            return vipBloc;
           },
         ),
       ],

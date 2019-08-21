@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:medivia_things/bloc/event/navigation_state.dart';
-import 'package:medivia_things/bloc/state/navigation_event.dart';
+import 'package:medivia_things/bloc/state/navigation_state.dart';
+import 'package:medivia_things/bloc/event/navigation_event.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   @override
