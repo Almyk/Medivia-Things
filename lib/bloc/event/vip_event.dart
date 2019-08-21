@@ -12,7 +12,12 @@ class AddNewVip extends VipEvent {
   toString() => "AddNewVip";
 }
 
-class UpdateVipList extends VipEvent {
+class UpdateVipListSuccess extends VipEvent {
   @override
-  toString() => "UpdateVipList";
+  toString() => "UpdateVipListSuccess";
+}
+
+class UpdateVipListError extends VipEvent {
+  @override
+  toString() => "UpdateVipListError";
 }

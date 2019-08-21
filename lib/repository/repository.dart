@@ -55,9 +55,13 @@ class Repository {
     return null;
   }
 
-  Future<void> addVipByName(String name) async {
+  void addVipByName(String name) async {
     Player player = await getPlayerInfo(name);
-    vipList.add(player);
-    vipBloc.dispatch(UpdateVipList());
+    if (player.name != null) {
+      vipList.add(player);
+      vipBloc.dispatch(UpdateVipListSuccess());
+    } else {
+      vipBloc.dispatch(UpdateVipListError());
+    }
   }
 }

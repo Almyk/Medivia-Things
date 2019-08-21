@@ -18,7 +18,12 @@ class VipBloc extends Bloc<VipEvent, VipState> {
       yield UpdatingVipList();
       repository.addVipByName(event.name);
     }
-    if (event is UpdateVipList) {
+    if (event is UpdateVipListSuccess) {
+      // TODO show a success toast
+      yield ShowingVipList();
+    }
+    if (event is UpdateVipListError) {
+      // TODO show an error toast
       yield ShowingVipList();
     }
   }
