@@ -8,7 +8,7 @@ import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
 import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/utils/constants.dart';
-import 'package:medivia_things/utils/utilities.dart';
+import 'package:medivia_things/models/player.dart';
 
 class Repository {
   OnlineBloc onlineBloc;

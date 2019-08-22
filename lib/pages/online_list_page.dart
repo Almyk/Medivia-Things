@@ -5,7 +5,7 @@ import 'package:medivia_things/bloc/state/online_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/utils/drawer.dart';
-import 'package:medivia_things/utils/utilities.dart';
+import 'package:medivia_things/models/onlinePlayer.dart';
 
 import '../bloc/blocs/navigation_bloc.dart';
 

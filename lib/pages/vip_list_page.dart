@@ -5,7 +5,7 @@ import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/bloc/state/vip_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/drawer.dart';
-import 'package:medivia_things/utils/utilities.dart';
+import 'package:medivia_things/models/player.dart';
 
 import '../bloc/blocs/navigation_bloc.dart';
 
