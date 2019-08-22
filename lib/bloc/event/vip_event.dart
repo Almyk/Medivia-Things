@@ -9,7 +9,7 @@ class AddNewVip extends VipEvent {
   AddNewVip({@required this.name});
 
   @override
-  toString() => "AddNewVip";
+  toString() => "AddNewVip $name";
 }
 
 class UpdateVipListSuccess extends VipEvent {

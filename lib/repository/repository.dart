@@ -9,20 +9,23 @@ import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/models/player.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as path;
 
 class Repository {
   OnlineBloc onlineBloc;
   NavigationBloc navigationBloc;
   VipBloc vipBloc;
 
+  Database database;
+
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
-
   List<Player> vipList = [];
-
   Timer onlineUpdateTimer;
 
   void init() {
+    loadDatabase();
     getOnlineLists();
     onlineUpdateTimer = Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     print("Started online list updater");
@@ -30,6 +33,13 @@ class Repository {
 
   void dispose() {
     onlineUpdateTimer?.cancel();
+  }
+
+  void loadDatabase() async {
+    this.database = await openDatabase(
+      path.join(await getDatabasesPath(), 'medivia_database.db')
+    );
+    // TODO: probably dispatch an event here to load vip list from DB
   }
 
   void getOnlineLists() async {
@@ -57,7 +67,9 @@ class Repository {
 
   void addVipByName(String name) async {
     Player player = await getPlayerInfo(name);
+    print("test");
     if (player.name != null) {
+      print("success");
       vipList.add(player);
       vipBloc.dispatch(UpdateVipListSuccess());
     } else {

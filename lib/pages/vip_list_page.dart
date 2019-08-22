@@ -91,6 +91,7 @@ class VipListPage extends StatelessWidget {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
+          leading: Image.network(player.logo),
           title: Text(player.name),
           trailing: Text(player.status),
           subtitle: Text("Lv: " +

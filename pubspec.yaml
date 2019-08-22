@@ -1,5 +1,5 @@
 name: medivia_things
-description: Application for the online game Medivia
+description: A new Flutter project.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -14,7 +14,7 @@ description: Application for the online game Medivia
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -23,8 +23,8 @@ dependencies:
   flutter_bloc: ^0.20.0
   http: ^0.12.0+2
   equatable: ^0.2.0
-  sqflite:
-  path:
+  sqflite: ^1.1.6+3
+  path: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -36,7 +36,7 @@ dev_dependencies:
 
 
 # For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
+# following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:

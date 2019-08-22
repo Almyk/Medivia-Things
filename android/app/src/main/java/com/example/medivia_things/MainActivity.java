@@ -1,4 +1,4 @@
-package com.almyk.medivia_things;
+package com.example.medivia_things;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
