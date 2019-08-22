@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
@@ -91,14 +92,22 @@ class VipListPage extends StatelessWidget {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
-          leading: Image.network(player.logo),
+          leading: CachedNetworkImage(
+            width: 50.0,
+            height: 50.0,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            imageUrl: player.logo,
+            ),
           title: Text(player.name),
-          trailing: Text(player.status),
+          trailing: Text(
+              player.status,
+              style: TextStyle(color: player.status == "Online" ? Colors.green : Colors.black),
+            ),
           subtitle: Text("Lv: " +
               player.level.toString() +
               ", ${player.profession}, ${player.world}"),
           onTap: () {
-            print(player.toString());
+            player.printTypes();
           },
         ),
       ),

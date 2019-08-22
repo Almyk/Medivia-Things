@@ -9,15 +9,13 @@ import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/models/player.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as path;
 
 class Repository {
   OnlineBloc onlineBloc;
   NavigationBloc navigationBloc;
   VipBloc vipBloc;
 
-  Database database;
+  final PlayerProvider playerProvider = PlayerProvider();
 
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
@@ -25,21 +23,25 @@ class Repository {
   Timer onlineUpdateTimer;
 
   void init() {
-    loadDatabase();
+    initVipList();
     getOnlineLists();
-    onlineUpdateTimer = Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
+    onlineUpdateTimer =
+        Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     print("Started online list updater");
+  }
+
+  Future initVipList() async {
+    print("initVipList");
+    playerProvider.initDB();
+    Future.delayed(Duration(seconds: 2), () async {
+      vipBloc.dispatch(RefreshVipList());
+      vipList = await playerProvider.getAllVip();
+      vipBloc.dispatch(UpdateVipListSuccess());
+    });
   }
 
   void dispose() {
     onlineUpdateTimer?.cancel();
-  }
-
-  void loadDatabase() async {
-    this.database = await openDatabase(
-      path.join(await getDatabasesPath(), 'medivia_database.db')
-    );
-    // TODO: probably dispatch an event here to load vip list from DB
   }
 
   void getOnlineLists() async {
@@ -68,9 +70,11 @@ class Repository {
   void addVipByName(String name) async {
     Player player = await getPlayerInfo(name);
     print("test");
-    if (player.name != null) {
+    if (player != null) {
       print("success");
-      vipList.add(player);
+      //vipList.add(player);
+      await playerProvider.insertNewVip(player);
+      vipList = await playerProvider.getAllVip();
       vipBloc.dispatch(UpdateVipListSuccess());
     } else {
       vipBloc.dispatch(UpdateVipListError());

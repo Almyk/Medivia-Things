@@ -26,6 +26,9 @@ class VipBloc extends Bloc<VipEvent, VipState> {
       // TODO show an error toast
       yield ShowingVipList();
     }
+    if (event is RefreshVipList) {
+      yield UpdatingVipList();
+    }
   }
 
 }

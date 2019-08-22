@@ -21,3 +21,8 @@ class UpdateVipListError extends VipEvent {
   @override
   toString() => "UpdateVipListError";
 }
+
+class RefreshVipList extends VipEvent {
+  @override
+  toString() => "RefreshVipList";
+}
