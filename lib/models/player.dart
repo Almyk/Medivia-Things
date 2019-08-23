@@ -127,13 +127,10 @@ class PlayerProvider {
   static Database _db;
 
   Future<Database> get database async {
-    print("get DB");
     if (_db != null) {
-      print("return existing DB");
       return _db;
     }
     _db = await initDB();
-    print("return new DB");
     return _db;
   }
 
@@ -145,22 +142,22 @@ class PlayerProvider {
   _onCreate(Database db, int version) async {
     await db.execute("create table $vipListTableName ("
         "name text primary key,"
-        "level text not null,"
-        "profession text not null,"
-        "status text not null,"
-        "world text not null,"
-        "comment text not null,"
-        "accountStatus text not null,"
-        "guild text not null,"
-        "house text not null,"
-        "sex text not null,"
-        "residence text not null,"
-        "lastLogin text not null,"
-        "position text not null,"
-        "tasksDone integer not null,"
-        "logo text not null,"
-        "latestDeaths text not null,"
-        "latestKills text not null,"
+        "level text,"
+        "profession text,"
+        "status text,"
+        "world text,"
+        "comment text,"
+        "accountStatus text,"
+        "guild text,"
+        "house text,"
+        "sex text,"
+        "residence text,"
+        "lastLogin text,"
+        "position text,"
+        "tasksDone integer,"
+        "logo text,"
+        "latestDeaths text,"
+        "latestKills text,"
         "taskList text)");
   }
 
@@ -179,8 +176,6 @@ class PlayerProvider {
     List<Player> vipList = result.isNotEmpty
         ? result.map((p) => Player.fromMap(p, db: true)).toList()
         : [];
-    
-    print("return viplist from DB");
     return vipList;
   }
 }

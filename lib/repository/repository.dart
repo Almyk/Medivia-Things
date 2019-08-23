@@ -32,8 +32,8 @@ class Repository {
 
   Future initVipList() async {
     print("initVipList");
-    playerProvider.initDB();
-    Future.delayed(Duration(seconds: 2), () async {
+    await playerProvider.initDB();
+    Future.delayed(Duration(milliseconds: 500), () async {
       vipBloc.dispatch(RefreshVipList());
       vipList = await playerProvider.getAllVip();
       vipBloc.dispatch(UpdateVipListSuccess());
@@ -47,11 +47,42 @@ class Repository {
   void getOnlineLists() async {
     for (int i = 0; i < 5; i++) {
       var response = await http.get(onlineUrl + serverNames[i].toLowerCase());
-      Map onlineList = json.decode(response.body);
+      Map<String, dynamic> onlineList = json.decode(response.body);
       onlineLists[i] = onlineList;
       onlineCounts[i] = onlineList['players'].length;
+
       onlineBloc.dispatch(OnlineCountUpdate(server: serverNames[i]));
     }
+    await updateVipList();
+  }
+
+  Future updateVipList() async {
+    vipList.forEach((player) async {
+      bool online = false;
+      for (int i = 0; i < 5; i++) {
+        onlineLists[i]['players'].forEach((onlinePlayer) async {
+          if (player.name == onlinePlayer['name']) {
+            print("${player.name} is online");
+            online = true;
+            player.name = onlinePlayer['name'];
+            player.level = onlinePlayer['level'].toString();
+            player.lastLogin = onlinePlayer['login'];
+            player.profession = onlinePlayer['vocation'];
+            player.status = "Online";
+            vipBloc.dispatch(RefreshVipList());
+            await playerProvider.insertNewVip(player);
+          }
+        });
+        if (online) break;
+      }
+      if (online == false && player.status != "Offline") {
+        player.status = "Offline";
+        vipBloc.dispatch(RefreshVipList());
+        await playerProvider.insertNewVip(player);
+      }
+    });
+    vipList = await playerProvider.getAllVip();
+    vipBloc.dispatch(UpdateVipListSuccess());
   }
 
   Future<Player> getPlayerInfo(String name) async {
@@ -67,7 +98,7 @@ class Repository {
     return null;
   }
 
-  void addVipByName(String name) async {
+  Future addVipByName(String name) async {
     Player player = await getPlayerInfo(name);
     print("test");
     if (player != null) {
