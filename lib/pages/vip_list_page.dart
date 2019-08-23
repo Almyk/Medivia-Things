@@ -92,17 +92,21 @@ class VipListPage extends StatelessWidget {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
-          leading: CachedNetworkImage(
-            width: 50.0,
-            height: 50.0,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            imageUrl: player.logo,
+          leading: ClipOval(
+            child: CachedNetworkImage(
+              width: 50.0,
+              height: 50.0,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              imageUrl: player.logo,
+              fit: BoxFit.contain,
             ),
+          ),
           title: Text(player.name),
           trailing: Text(
-              player.status,
-              style: TextStyle(color: player.status == "Online" ? Colors.green : Colors.black),
-            ),
+            player.status,
+            style: TextStyle(
+                color: player.status == "Online" ? Colors.green : Colors.black),
+          ),
           subtitle: Text("Lv: " +
               player.level.toString() +
               ", ${player.profession}, ${player.world}"),
