@@ -79,7 +79,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Medivia Things',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
+        scaffoldBackgroundColor: Colors.grey[400],
+        appBarTheme: AppBarTheme(elevation: 10.0),
       ),
       home: BlocBuilder<NavigationBloc, NavigationState>(
         bloc: navigationBloc,

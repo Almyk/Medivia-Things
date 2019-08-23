@@ -36,38 +36,39 @@ class VipListPage extends StatelessWidget {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(labelText: 'player name'),
-                          controller: nameController,
-                        ),
-                      ),
-                      RaisedButton(
-                        padding: const EdgeInsets.all(0.0),
-                        elevation: 4.0,
-                        child: Text("ADD"),
-                        color: Colors.blue,
-                        onPressed: () => state is ShowingVipList
-                            ? vipBloc
-                                .dispatch(AddNewVip(name: nameController.text))
-                            : null,
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: _buildVipListItems(context, repository.vipList),
-                )
+                _addVipWidget(context, state, vipBloc),
+                _buildVipListItems(context, repository.vipList),
               ],
             ),
           );
         });
+  }
+
+  Padding _addVipWidget(BuildContext context, VipState state, VipBloc vipBloc) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(labelText: 'player name'),
+              controller: nameController,
+            ),
+          ),
+          RaisedButton(
+            padding: const EdgeInsets.all(0.0),
+            elevation: 4.0,
+            child: Text("ADD"),
+            color: Theme.of(context).colorScheme.primaryVariant,
+            onPressed: () => state is ShowingVipList
+                ? vipBloc.dispatch(AddNewVip(name: nameController.text))
+                : null,
+          )
+        ],
+      ),
+    );
   }
 
   Widget _buildVipListItems(BuildContext context, List<Player> players) {
@@ -76,9 +77,11 @@ class VipListPage extends StatelessWidget {
     for (final player in players) {
       vipList.add(_buildVipListItem(context, player));
     }
-    return Scrollbar(
-      child: ListView(
-        children: vipList,
+    return Expanded(
+      child: Scrollbar(
+        child: ListView(
+          children: vipList,
+        ),
       ),
     );
   }
