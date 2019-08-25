@@ -17,8 +17,7 @@ class VipListPage extends StatelessWidget {
   final String title;
   final NavigationBloc navigationBloc;
   final Repository repository;
-
-  final nameController = TextEditingController();
+  final VipBottomSheet vipBottomSheet = VipBottomSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +28,16 @@ class VipListPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(title),
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.add),
+                    onTap: () =>
+                        vipBottomSheet.mainBottomSheet(context, vipBloc),
+                  ),
+                )
+              ],
             ),
             drawer: MyDrawer(
               repository: repository,
@@ -36,39 +45,11 @@ class VipListPage extends StatelessWidget {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _addVipWidget(context, state, vipBloc),
                 _buildVipListItems(context, repository.vipList),
               ],
             ),
           );
         });
-  }
-
-  Padding _addVipWidget(BuildContext context, VipState state, VipBloc vipBloc) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: 'player name'),
-              controller: nameController,
-            ),
-          ),
-          RaisedButton(
-            padding: const EdgeInsets.all(0.0),
-            elevation: 4.0,
-            child: Text("ADD"),
-            color: Theme.of(context).colorScheme.primaryVariant,
-            onPressed: () => state is ShowingVipList
-                ? vipBloc.dispatch(AddNewVip(name: nameController.text))
-                : null,
-          )
-        ],
-      ),
-    );
   }
 
   Widget _buildVipListItems(BuildContext context, List<Player> players) {
@@ -119,5 +100,57 @@ class VipListPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class VipBottomSheet {
+  final nameController = TextEditingController();
+
+  mainBottomSheet(BuildContext context, VipBloc vipBloc) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  left: 2.0,
+                  right: 2.0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: _addVipWidget(context, vipBloc));
+        });
+  }
+
+  Widget _addVipWidget(BuildContext context, VipBloc vipBloc) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Expanded(
+          child: TextField(
+            autofocus: true,
+            decoration: InputDecoration(labelText: 'player name'),
+            controller: nameController,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _addVip(context, vipBloc),
+          ),
+        ),
+        RaisedButton(
+            padding: const EdgeInsets.all(0.0),
+            elevation: 4.0,
+            child: Text("ADD"),
+            color: Theme.of(context).colorScheme.primaryVariant,
+            onPressed: () {
+              nameController.text.isNotEmpty
+                  ? _addVip(context, vipBloc)
+                  : Navigator.pop(context);
+            })
+      ],
+    );
+  }
+
+  void _addVip(BuildContext context, VipBloc vipBloc) {
+    Navigator.pop(context);
+    print(nameController.text);
+    vipBloc.dispatch(AddNewVip(name: nameController.text));
   }
 }

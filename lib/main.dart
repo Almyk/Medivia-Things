@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
       title: 'Medivia Things',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
-        scaffoldBackgroundColor: Colors.grey[400],
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(elevation: 10.0),
       ),
       home: BlocBuilder<NavigationBloc, NavigationState>(
