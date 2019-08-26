@@ -18,6 +18,7 @@ class VipListPage extends StatelessWidget {
   final NavigationBloc navigationBloc;
   final Repository repository;
   final VipBottomSheet vipBottomSheet = VipBottomSheet();
+  final PlayerBottomSheet playerBottomSheet = PlayerBottomSheet();
 
   @override
   Widget build(BuildContext context) {
@@ -76,28 +77,26 @@ class VipListPage extends StatelessWidget {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
-          leading: ClipOval(
-            child: CachedNetworkImage(
-              width: 50.0,
-              height: 50.0,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              imageUrl: player.logo,
-              fit: BoxFit.contain,
+            leading: ClipOval(
+              child: CachedNetworkImage(
+                width: 50.0,
+                height: 50.0,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                imageUrl: player.logo,
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
-          title: Text(player.name),
-          trailing: Text(
-            player.status,
-            style: TextStyle(
-                color: player.status == "Online" ? Colors.green : Colors.black),
-          ),
-          subtitle: Text("Lv: " +
-              player.level.toString() +
-              ", ${player.profession}, ${player.world}"),
-          onTap: () {
-            player.printTypes();
-          },
-        ),
+            title: Text(player.name),
+            trailing: Text(
+              player.status,
+              style: TextStyle(
+                  color:
+                      player.status == "Online" ? Colors.green : Colors.black),
+            ),
+            subtitle: Text("Lv: " +
+                player.level.toString() +
+                ", ${player.profession}, ${player.world}"),
+            onTap: () => playerBottomSheet.mainBottomSheet(context, player)),
       ),
     );
   }
@@ -152,5 +151,39 @@ class VipBottomSheet {
     Navigator.pop(context);
     print(nameController.text);
     vipBloc.dispatch(AddNewVip(name: nameController.text));
+  }
+}
+
+class PlayerBottomSheet {
+  mainBottomSheet(BuildContext context, Player player) {
+    final VipBloc vipBloc = BlocProvider.of<VipBloc>(context);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return _buildPlayerInfo(player);
+        });
+  }
+
+  Widget _buildPlayerInfo(Player player) {
+    return ListView(
+        padding: EdgeInsets.all(8.0), children: _buildTiles(player));
+  }
+
+  List<Widget> _buildTiles(Player player) {
+    List<Widget> tiles = [];
+
+    var playerMap = player.toMap(db: true);
+    playerMap.forEach((key, value) {
+      if (key != "logo") {
+        Widget row = Row(
+          children: <Widget>[
+            Text("$key: "),
+            Expanded(child: Text(value.toString()))
+          ],
+        );
+        tiles.add(row);
+      }
+    });
+    return tiles;
   }
 }

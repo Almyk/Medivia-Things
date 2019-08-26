@@ -75,7 +75,7 @@ class Player {
     }
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool db = true}) {
     return {
       'name': name,
       'level': level,
@@ -92,9 +92,9 @@ class Player {
       'position': position,
       'tasksDone': tasksDone,
       'logo': logo,
-      'LatestDeaths': latestDeaths.join(','),
-      'LatestKills': latestKills.join(','),
-      'taskList': taskList != null ? taskList.join(',') : null
+      'LatestDeaths': db ? latestDeaths.join(',') : latestDeaths,
+      'LatestKills': db ? latestKills.join(',') : latestKills,
+      'taskList': db ? (taskList != null ? taskList.join(',') : null) : taskList
     };
   }
 
