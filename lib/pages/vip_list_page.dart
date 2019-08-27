@@ -155,10 +155,13 @@ class VipBottomSheet {
 }
 
 class PlayerBottomSheet {
+  BuildContext _context;
+  VipBloc _vipBloc;
   mainBottomSheet(BuildContext context, Player player) {
-    final VipBloc vipBloc = BlocProvider.of<VipBloc>(context);
+    _vipBloc = BlocProvider.of<VipBloc>(context);
+    _context = context;
     showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         context: context,
         builder: (BuildContext context) {
           return _buildPlayerInfo(player);
@@ -168,16 +171,41 @@ class PlayerBottomSheet {
   Widget _buildPlayerInfo(Player player) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.white
-        ),
-      child: ListView(
-          padding: EdgeInsets.all(8.0), children: _buildTiles(player)),
+          borderRadius: BorderRadius.circular(25.0), color: Colors.white),
+      child: Scrollbar(
+        child: ListView(
+            padding: EdgeInsets.all(8.0), children: _buildTiles(player)),
+      ),
     );
   }
 
   List<Widget> _buildTiles(Player player) {
     List<Widget> tiles = [];
+
+    Widget icons = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        GestureDetector(
+          child: Icon(
+            Icons.delete,
+            size: 35.0,
+          ),
+          onTap: () {
+            Navigator.pop(_context);
+            _vipBloc.dispatch(DeleteVip(name: player.name));
+          },
+        ),
+        GestureDetector(
+          child: Icon(
+            Icons.close,
+            color: Colors.red,
+            size: 35.0,
+          ),
+          onTap: () => Navigator.pop(_context),
+        )
+      ],
+    );
+    tiles.add(icons);
 
     var playerMap = player.toMap(db: true);
     playerMap.forEach((key, value) {

@@ -12,6 +12,15 @@ class AddNewVip extends VipEvent {
   toString() => "AddNewVip $name";
 }
 
+class DeleteVip extends VipEvent {
+  final String name;
+
+  DeleteVip({@required this.name});
+
+  @override
+  toString() => "AddNewVip $name";
+}
+
 class UpdateVipListSuccess extends VipEvent {
   @override
   toString() => "UpdateVipListSuccess";

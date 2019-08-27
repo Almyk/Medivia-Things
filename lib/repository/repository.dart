@@ -100,15 +100,18 @@ class Repository {
 
   Future addVipByName(String name) async {
     Player player = await getPlayerInfo(name);
-    print("test");
     if (player != null) {
-      print("success");
-      //vipList.add(player);
       await playerProvider.insertNewVip(player);
       vipList = await playerProvider.getAllVip();
       vipBloc.dispatch(UpdateVipListSuccess());
     } else {
       vipBloc.dispatch(UpdateVipListError());
     }
+  }
+
+  Future deleteVipByName(String name) async {
+    await playerProvider.deleteVip(name);
+    vipList = await playerProvider.getAllVip();
+    vipBloc.dispatch(UpdateVipListSuccess());
   }
 }

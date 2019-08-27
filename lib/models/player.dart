@@ -41,19 +41,19 @@ class Player {
       position = map['position'];
       tasksDone = map['tasksDone'];
       logo = map['logo'];
-      
 
       String temp = map['latestDeaths'];
       latestDeaths = temp.split(',');
 
       temp = map['latestKills'];
       latestKills = temp.split(',');
-      
+
       temp = map['taskList'];
       if (temp != null) {
         taskList = temp.split(',');
       }
-    } else { // called from web api
+    } else {
+      // called from web api
       name = map['name'];
       level = map['level'];
       profession = map['profession'];
@@ -177,5 +177,10 @@ class PlayerProvider {
         ? result.map((p) => Player.fromMap(p, db: true)).toList()
         : [];
     return vipList;
+  }
+
+  Future deleteVip(String name) async {
+    final db = await database;
+    await db.delete(vipListTableName, where: "name = ?", whereArgs: [name]);
   }
 }
