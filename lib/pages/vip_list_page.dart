@@ -171,7 +171,7 @@ class PlayerBottomSheet {
   Widget _buildPlayerInfo(Player player) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0), color: Colors.white),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)), color: Colors.white),
       child: Column(
         children: <Widget>[
           Padding(
