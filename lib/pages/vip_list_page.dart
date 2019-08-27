@@ -220,15 +220,15 @@ class PlayerBottomSheet {
             ),
             trailing: Text(
               key.toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.bold),
+              // style: TextStyle(fontWeight: FontWeight.bold),
             ),
           );
         } else {
           row = ListTile(
-            title: Text(value.toString()),
+            title: Text(value.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
             trailing: Text(
               key.toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.bold),
+              // style: TextStyle(fontWeight: FontWeight.bold),
             ),
           );
         }

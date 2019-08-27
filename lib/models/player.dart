@@ -171,7 +171,7 @@ class PlayerProvider {
   Future<List<Player>> getAllVip() async {
     print("getAllVip");
     final db = await database;
-    var result = await db.query(vipListTableName);
+    var result = await db.query(vipListTableName, orderBy: "status DESC, name ASC");
 
     List<Player> vipList = result.isNotEmpty
         ? result.map((p) => Player.fromMap(p, db: true)).toList()
