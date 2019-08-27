@@ -43,7 +43,7 @@ class Player {
       logo = map['logo'];
 
       String temp = map['latestDeaths'];
-      latestDeaths = temp.split(',');
+      latestDeaths = temp.split(':');
 
       temp = map['latestKills'];
       latestKills = temp.split(',');
@@ -92,7 +92,7 @@ class Player {
       'position': position,
       'tasksDone': tasksDone,
       'logo': logo,
-      'LatestDeaths': db ? latestDeaths.join(',') : latestDeaths,
+      'LatestDeaths': db ? latestDeaths.join(':') : latestDeaths,
       'LatestKills': db ? latestKills.join(',') : latestKills,
       'taskList': db ? (taskList != null ? taskList.join(',') : null) : taskList
     };

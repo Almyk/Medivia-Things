@@ -174,7 +174,10 @@ class PlayerBottomSheet {
           borderRadius: BorderRadius.circular(25.0), color: Colors.white),
       child: Column(
         children: <Widget>[
-          _iconRow(player),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _iconRow(player),
+          ),
           Container(
             child: Expanded(
               child: Scrollbar(
@@ -192,15 +195,43 @@ class PlayerBottomSheet {
   List<Widget> _buildTiles(Player player) {
     List<Widget> tiles = [];
 
-    var playerMap = player.toMap(db: true);
+    var playerMap = player.toMap(db: false);
     playerMap.forEach((key, value) {
       if (key != "logo") {
-        Widget row = Row(
-          children: <Widget>[
-            Text("$key: "),
-            Expanded(child: Text(value.toString()))
-          ],
-        );
+        Widget row;
+        if (["latestdeaths", "latestkills", "tasklist"]
+                .indexOf(key.toLowerCase()) !=
+            -1) {
+          List<String> values = value;
+          row = ListTile(
+            title: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(5.0)),
+              height: values.length < 2 ? 70.0 : 150.0,
+              child: Scrollbar(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ListView(
+                    children: _listStringToListWidget(value),
+                  ),
+                ),
+              ),
+            ),
+            trailing: Text(
+              key.toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          );
+        } else {
+          row = ListTile(
+            title: Text(value.toString()),
+            trailing: Text(
+              key.toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          );
+        }
         tiles.add(row);
       }
     });
@@ -232,5 +263,14 @@ class PlayerBottomSheet {
       ],
     );
     return icons;
+  }
+
+  List<Widget> _listStringToListWidget(List<String> list) {
+    List<Widget> newList = [];
+    list.forEach((entry) => newList.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(entry),
+        )));
+    return newList;
   }
 }
