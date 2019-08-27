@@ -94,7 +94,7 @@ class Player {
       'logo': logo,
       'LatestDeaths': db ? latestDeaths.join(':') : latestDeaths,
       'LatestKills': db ? latestKills.join(',') : latestKills,
-      'taskList': db ? (taskList != null ? taskList.join(',') : null) : taskList
+      'taskList': db ? (taskList != null ? taskList.join(',') : null) : taskList != null ? taskList : []
     };
   }
 

@@ -202,7 +202,7 @@ class PlayerBottomSheet {
         if (["latestdeaths", "latestkills", "tasklist"]
                 .indexOf(key.toLowerCase()) !=
             -1) {
-          List<String> values = value;
+          List<dynamic> values = value;
           row = ListTile(
             title: Container(
               decoration: BoxDecoration(
@@ -265,7 +265,7 @@ class PlayerBottomSheet {
     return icons;
   }
 
-  List<Widget> _listStringToListWidget(List<String> list) {
+  List<Widget> _listStringToListWidget(List<dynamic> list) {
     List<Widget> newList = [];
     list.forEach((entry) => newList.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
