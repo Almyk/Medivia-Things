@@ -172,9 +172,19 @@ class PlayerBottomSheet {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0), color: Colors.white),
-      child: Scrollbar(
-        child: ListView(
-            padding: EdgeInsets.all(8.0), children: _buildTiles(player)),
+      child: Column(
+        children: <Widget>[
+          _iconRow(player),
+          Container(
+            child: Expanded(
+              child: Scrollbar(
+                child: ListView(
+                    padding: EdgeInsets.all(8.0),
+                    children: _buildTiles(player)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -182,6 +192,22 @@ class PlayerBottomSheet {
   List<Widget> _buildTiles(Player player) {
     List<Widget> tiles = [];
 
+    var playerMap = player.toMap(db: true);
+    playerMap.forEach((key, value) {
+      if (key != "logo") {
+        Widget row = Row(
+          children: <Widget>[
+            Text("$key: "),
+            Expanded(child: Text(value.toString()))
+          ],
+        );
+        tiles.add(row);
+      }
+    });
+    return tiles;
+  }
+
+  Widget _iconRow(Player player) {
     Widget icons = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -205,20 +231,6 @@ class PlayerBottomSheet {
         )
       ],
     );
-    tiles.add(icons);
-
-    var playerMap = player.toMap(db: true);
-    playerMap.forEach((key, value) {
-      if (key != "logo") {
-        Widget row = Row(
-          children: <Widget>[
-            Text("$key: "),
-            Expanded(child: Text(value.toString()))
-          ],
-        );
-        tiles.add(row);
-      }
-    });
-    return tiles;
+    return icons;
   }
 }

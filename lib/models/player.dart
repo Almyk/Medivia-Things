@@ -32,7 +32,7 @@ class Player {
       status = map['status'];
       world = map['world'];
       comment = map['comment'];
-      accountStatus = map['accountstatus'];
+      accountStatus = map['accountStatus'];
       guild = map['guild'];
       house = map['house'];
       sex = map['sex'];
