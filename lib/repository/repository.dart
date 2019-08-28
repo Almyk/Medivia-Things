@@ -9,6 +9,7 @@ import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/models/player.dart';
+import 'package:medivia_things/utils/notifications.dart';
 
 class Repository {
   OnlineBloc onlineBloc;
@@ -21,6 +22,8 @@ class Repository {
   List<int> onlineCounts = [0, 0, 0, 0, 0];
   List<Player> vipList = [];
   Timer onlineUpdateTimer;
+
+  final Notifications notifications = Notifications();
 
   void init() {
     initVipList();
@@ -56,12 +59,49 @@ class Repository {
     await updateVipList();
   }
 
+  Future vipUpdate() async {
+    for (int i = 0; i < 5; i++) {
+      List<String> names = [];
+      vipList.forEach((player) async {
+        bool online = false;
+        for (final onlinePlayer in onlineLists[i]['players']) {
+          if (player.name == onlinePlayer['name']) {
+            if (player.status == "Offline") {
+              names.add(player.name);
+            }
+            print("${player.name} is online");
+            online = true;
+            player.name = onlinePlayer['name'];
+            player.level = onlinePlayer['level'].toString();
+            player.lastLogin = onlinePlayer['login'];
+            player.profession = onlinePlayer['vocation'];
+            player.status = "Online";
+            vipBloc.dispatch(RefreshVipList());
+            await playerProvider.insertNewVip(player);
+          }
+        }
+        notifications.playerLoggedIn(i, names.join(", "));
+        if (player.world.toLowerCase() == serverNames[i] && !online) {
+          player.status = "Offline";
+          vipBloc.dispatch(RefreshVipList());
+          await playerProvider.insertNewVip(player);
+        }
+      });
+    }
+    vipList = await playerProvider.getAllVip();
+    vipBloc.dispatch(UpdateVipListSuccess());
+  }
+
   Future updateVipList() async {
     vipList.forEach((player) async {
       bool online = false;
       for (int i = 0; i < 5; i++) {
         onlineLists[i]['players'].forEach((onlinePlayer) async {
           if (player.name == onlinePlayer['name']) {
+            if (player.status == "Offline") {
+              // TODO: create notification
+              notifications.playerLoggedIn(i, player.name);
+            }
             print("${player.name} is online");
             online = true;
             player.name = onlinePlayer['name'];
