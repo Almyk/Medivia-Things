@@ -20,6 +20,7 @@ class Repository {
 
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
+  int sortMode = 0;
   List<Player> vipList = [];
   Timer onlineUpdateTimer;
 
@@ -53,8 +54,10 @@ class Repository {
       Map<String, dynamic> onlineList = json.decode(response.body);
       onlineLists[i] = onlineList;
       onlineCounts[i] = onlineList['players'].length;
-
-      onlineBloc.dispatch(OnlineCountUpdate(server: serverNames[i]));
+    }
+    sortOnline(sortMode);
+    for (int i = 0; i < 5; i++) {
+      onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
     }
     await updateVipList();
   }
@@ -153,5 +156,61 @@ class Repository {
     await playerProvider.deleteVip(name);
     vipList = await playerProvider.getAllVip();
     vipBloc.dispatch(UpdateVipListSuccess());
+  }
+
+  void sortOnline(int mode) {
+    switch (mode) {
+      case 0:
+        sortOnlineByLevel();
+        break;
+      case 1:
+        sortOnlineByName();
+        break;
+      case 2:
+        sortOnlineByLogin();
+        break;
+      default:
+        break;
+    }
+  }
+
+  void sortOnlineByLevel() {
+    for (int i = 0; i < 5; i++) {
+      onlineLists[i]['players']
+          .sort((a, b) => (b['level'] as int).compareTo(a['level'] as int));
+      onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
+    }
+  }
+
+  void sortOnlineByName() {
+    for (int i = 0; i < 5; i++) {
+      onlineLists[i]['players']
+          .sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
+    }
+  }
+
+  void sortOnlineByLogin() {
+    final List<String> time = ["second", "seconds", "minute", "minutes", "hour", "hours"];
+    for (int i = 0; i < 5; i++) {
+      onlineLists[i]['players'].sort((a, b) {
+        var A = a['login'].split(" ");
+        var B = b['login'].split(" ");
+        int aInt = int.tryParse(A[0]);
+        int bInt = int.tryParse(B[0]);
+
+        if (time.indexOf(A[1]) > time.indexOf(B[1])) {
+          return -1;
+        } else if (time.indexOf(A[1]) < time.indexOf(B[1])) {
+          return 1;
+        }
+
+        if (aInt >= bInt) {
+          return -1;
+        }
+        return 1;
+      });
+      onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
+    }
   }
 }

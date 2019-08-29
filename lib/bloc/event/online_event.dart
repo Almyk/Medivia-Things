@@ -3,11 +3,16 @@ import 'package:flutter/cupertino.dart';
 
 abstract class OnlineEvent extends Equatable {}
 
-class OnlineCountUpdate extends OnlineEvent {
+class OnlineUpdate extends OnlineEvent {
   final String server;
 
-  OnlineCountUpdate({@required this.server});
+  OnlineUpdate({@required this.server});
 
   @override
   toString() => "Online Count Updated $server";
+}
+
+class SortOnline extends OnlineEvent {
+  @override
+  toString() => "SortOnlineEvent";
 }

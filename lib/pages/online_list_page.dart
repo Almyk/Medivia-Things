@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
+import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/state/online_state.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/constants.dart';
@@ -11,8 +12,8 @@ import '../bloc/blocs/navigation_bloc.dart';
 
 class OnlineListPage extends StatelessWidget {
   OnlineListPage(
-      {Key key, this.title, this.server, this.navigationBloc, this.repository}
-      ) : super(key: key);
+      {Key key, this.title, this.server, this.navigationBloc, this.repository})
+      : super(key: key);
 
   final String title;
   final int server;
@@ -26,26 +27,38 @@ class OnlineListPage extends StatelessWidget {
       bloc: onlineBloc,
       builder: (BuildContext context, OnlineState state) {
         return Scaffold(
-          drawer: MyDrawer(repository: repository,),
-          appBar: AppBar(
-            title: Column(
-              children: <Widget>[
-                Container(
-                  child: Text(title),
-                  padding: EdgeInsets.symmetric(vertical: 4.0),
-                ),
-                Text(
-                  serverNames[server] + ' (${repository.onlineCounts[server].toString()})',
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+            drawer: MyDrawer(
+              repository: repository,
+            ),
+            appBar: AppBar(
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.sort),
+                    onTap: () => onlineBloc.dispatch(SortOnline()),
+                  ),
                 ),
               ],
+              title: Column(
+                children: <Widget>[
+                  Container(
+                    child: Text(title),
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                  ),
+                  Text(
+                    serverNames[server] +
+                        ' (${repository.onlineCounts[server].toString()})',
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
             ),
-          ),
-          body: _buildOnlineListItems(context, repository.onlineLists[server])
-        );
+            body:
+                _buildOnlineListItems(context, repository.onlineLists[server]));
       },
     );
   }
@@ -80,7 +93,7 @@ class OnlineListPage extends StatelessWidget {
           title: Text(record.name),
           trailing: Text(record.login),
           subtitle:
-          Text("Lv: " + record.level.toString() + ", " + record.vocation),
+              Text("Lv: " + record.level.toString() + ", " + record.vocation),
           onTap: () {
             print(record.toString());
           },

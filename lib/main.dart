@@ -49,7 +49,7 @@ void main() {
         ),
         BlocProvider<OnlineBloc>(
           builder: (BuildContext context) {
-            final OnlineBloc onlineBloc = OnlineBloc();
+            final OnlineBloc onlineBloc = OnlineBloc(repository: repository);
             repository.onlineBloc = onlineBloc;
             return onlineBloc;
           },
