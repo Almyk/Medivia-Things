@@ -94,7 +94,9 @@ class Player {
       'logo': logo,
       'LatestDeaths': db ? latestDeaths.join(':') : latestDeaths,
       'LatestKills': db ? latestKills.join(',') : latestKills,
-      'taskList': db ? (taskList != null ? taskList.join(',') : null) : taskList != null ? taskList : []
+      'taskList': db
+          ? (taskList != null ? taskList.join(',') : null)
+          : taskList != null ? taskList : []
     };
   }
 
@@ -171,7 +173,8 @@ class PlayerProvider {
   Future<List<Player>> getAllVip() async {
     print("getAllVip");
     final db = await database;
-    var result = await db.query(vipListTableName, orderBy: "status DESC, name ASC");
+    var result =
+        await db.query(vipListTableName, orderBy: "status DESC, name ASC");
 
     List<Player> vipList = result.isNotEmpty
         ? result.map((p) => Player.fromMap(p, db: true)).toList()

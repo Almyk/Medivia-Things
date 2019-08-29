@@ -10,6 +10,7 @@ import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/models/player.dart';
 import 'package:medivia_things/utils/notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
   OnlineBloc onlineBloc;
@@ -25,13 +26,20 @@ class Repository {
   Timer onlineUpdateTimer;
 
   final Notifications notifications = Notifications();
+  SharedPreferences sharedPreferences;
 
   void init() {
+    initPreferences();
     initVipList();
     getOnlineLists();
     onlineUpdateTimer =
         Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     print("Started online list updater");
+  }
+
+  Future initPreferences() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    sortMode = sharedPreferences.getInt("sortMode") ?? 0;
   }
 
   Future initVipList() async {
@@ -55,7 +63,7 @@ class Repository {
       onlineLists[i] = onlineList;
       onlineCounts[i] = onlineList['players'].length;
     }
-    sortOnline(sortMode);
+    sortOnline();
     for (int i = 0; i < 5; i++) {
       onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
     }
@@ -158,8 +166,8 @@ class Repository {
     vipBloc.dispatch(UpdateVipListSuccess());
   }
 
-  void sortOnline(int mode) {
-    switch (mode) {
+  void sortOnline() {
+    switch (sortMode) {
       case 0:
         sortOnlineByLevel();
         break;
@@ -191,11 +199,18 @@ class Repository {
   }
 
   void sortOnlineByLogin() {
-    final List<String> time = ["second", "seconds", "minute", "minutes", "hour", "hours"];
+    final List<String> time = [
+      "second",
+      "seconds",
+      "minute",
+      "minutes",
+      "hour",
+      "hours"
+    ];
     for (int i = 0; i < 5; i++) {
       onlineLists[i]['players'].sort((a, b) {
-        var A = a['login'].split(" ");
-        var B = b['login'].split(" ");
+        List<String> A = a['login'].split(" ");
+        List<String> B = b['login'].split(" ");
         int aInt = int.tryParse(A[0]);
         int bInt = int.tryParse(B[0]);
 

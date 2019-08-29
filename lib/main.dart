@@ -12,7 +12,6 @@ import 'package:medivia_things/utils/drawer.dart';
 
 import 'pages/online_list_page.dart';
 
-
 class MyBlocDelegate extends BlocDelegate {
   @override
   void onTransition(Bloc bloc, Transition transition) {
@@ -36,46 +35,50 @@ class MyBlocDelegate extends BlocDelegate {
 void main() {
   BlocSupervisor.delegate = MyBlocDelegate();
   final repository = Repository()..init();
-  final MyDrawer drawer = MyDrawer(repository: repository,);
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider<NavigationBloc>(
-          builder: (BuildContext context) {
-            final NavigationBloc navigationBloc = NavigationBloc();
-            repository.navigationBloc = navigationBloc;
-            return navigationBloc;
-          },
-        ),
-        BlocProvider<OnlineBloc>(
-          builder: (BuildContext context) {
-            final OnlineBloc onlineBloc = OnlineBloc(repository: repository);
-            repository.onlineBloc = onlineBloc;
-            return onlineBloc;
-          },
-        ),
-        BlocProvider<VipBloc>(
-          builder: (BuildContext context) {
-            final vipBloc = VipBloc(repository: repository);
-            repository.vipBloc = vipBloc;
-            return vipBloc;
-          },
-        ),
-      ],
-      child: MyApp(repository: repository, drawer: drawer,),
-    )
+  final MyDrawer drawer = MyDrawer(
+    repository: repository,
   );
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<NavigationBloc>(
+        builder: (BuildContext context) {
+          final NavigationBloc navigationBloc = NavigationBloc();
+          repository.navigationBloc = navigationBloc;
+          return navigationBloc;
+        },
+      ),
+      BlocProvider<OnlineBloc>(
+        builder: (BuildContext context) {
+          final OnlineBloc onlineBloc = OnlineBloc(repository: repository);
+          repository.onlineBloc = onlineBloc;
+          return onlineBloc;
+        },
+      ),
+      BlocProvider<VipBloc>(
+        builder: (BuildContext context) {
+          final vipBloc = VipBloc(repository: repository);
+          repository.vipBloc = vipBloc;
+          return vipBloc;
+        },
+      ),
+    ],
+    child: MyApp(
+      repository: repository,
+      drawer: drawer,
+    ),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final Repository repository;
   final MyDrawer drawer;
-  
+
   MyApp({Key key, @required this.repository, this.drawer}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final NavigationBloc navigationBloc = BlocProvider.of<NavigationBloc>(context);
+    final NavigationBloc navigationBloc =
+        BlocProvider.of<NavigationBloc>(context);
     return MaterialApp(
       title: 'Medivia Things',
       theme: ThemeData(
@@ -88,13 +91,12 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, NavigationState state) {
           if (state is OnlineList) {
             return OnlineListPage(
-                title: "Medivia Things",
-                server: state.server,
-                navigationBloc: navigationBloc,
-                repository: repository,
+              title: "Medivia Things",
+              server: state.server,
+              navigationBloc: navigationBloc,
+              repository: repository,
             );
-          }
-          else {
+          } else {
             return VipListPage(
               title: "Medivia Things",
               navigationBloc: navigationBloc,

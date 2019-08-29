@@ -8,7 +8,6 @@ import 'package:medivia_things/repository/repository.dart';
 
 class OnlineBloc extends Bloc<OnlineEvent, OnlineState> {
   final Repository repository;
-  static int sortMode = 0;
   OnlineBloc({@required this.repository});
 
   @override
@@ -21,9 +20,10 @@ class OnlineBloc extends Bloc<OnlineEvent, OnlineState> {
       yield ShowOnlinePlayers();
     }
     if (event is SortOnline) {
-      sortMode = (sortMode + 1) % 3;
-      repository.sortMode = sortMode;
-      repository.sortOnline(sortMode);
+      repository.sortMode = (repository.sortMode + 1) % 3;
+      print("sortMode: ${repository.sortMode}");
+      await repository.sharedPreferences.setInt("sortMode", repository.sortMode);
+      repository.sortOnline();
     }
   }
 }

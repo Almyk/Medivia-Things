@@ -171,7 +171,9 @@ class PlayerBottomSheet {
   Widget _buildPlayerInfo(Player player) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)), color: Colors.white),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)),
+          color: Colors.white),
       child: Column(
         children: <Widget>[
           Padding(
@@ -225,7 +227,8 @@ class PlayerBottomSheet {
           );
         } else {
           row = ListTile(
-            title: Text(value.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(value.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold)),
             trailing: Text(
               key.toUpperCase(),
               // style: TextStyle(fontWeight: FontWeight.bold),
