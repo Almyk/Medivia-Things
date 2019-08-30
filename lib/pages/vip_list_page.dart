@@ -208,18 +208,18 @@ class PlayerBottomSheet {
           row = ListTile(
             title: Container(
               constraints: BoxConstraints(
-                minHeight: 0.0,
+                minHeight: 30.0,
                 maxHeight: 200.0,
               ),
               decoration: BoxDecoration(
                   border: Border.all(),
                   borderRadius: BorderRadius.circular(5.0)),
-              height: 68.0 * value.length,
+              height: 68.0 * values.length,
               child: Scrollbar(
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ListView(
-                    children: _listStringToListWidget(value),
+                    children: values.length > 0 ? _listStringToListWidget(value) : [Center(child: Text("-"))],
                   ),
                 ),
               ),
