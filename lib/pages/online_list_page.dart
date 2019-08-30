@@ -68,6 +68,15 @@ class OnlineListPage extends StatelessWidget {
     List<dynamic> players = data['players'];
     List<Widget> onlineList = new List<Widget>();
 
+    if (players.length == 0) {
+      return Center(
+        child: Text(
+          "farrk has tiny hands",
+          style: TextStyle(fontSize: 24.0, color: Colors.black.withOpacity(0.2)),
+        ),
+      );
+    }
+
     for (final player in players) {
       onlineList.add(
           _buildOnlineListItem(context, Map<String, dynamic>.from(player)));

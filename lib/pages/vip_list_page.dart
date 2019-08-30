@@ -219,7 +219,9 @@ class PlayerBottomSheet {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ListView(
-                    children: values.length > 0 ? _listStringToListWidget(value) : [Center(child: Text("-"))],
+                    children: values.length > 0
+                        ? _listStringToListWidget(value)
+                        : [Center(child: Text("-"))],
                   ),
                 ),
               ),
