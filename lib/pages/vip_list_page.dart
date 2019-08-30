@@ -207,10 +207,14 @@ class PlayerBottomSheet {
           List<dynamic> values = value;
           row = ListTile(
             title: Container(
+              constraints: BoxConstraints(
+                minHeight: 0.0,
+                maxHeight: 200.0,
+              ),
               decoration: BoxDecoration(
                   border: Border.all(),
                   borderRadius: BorderRadius.circular(5.0)),
-              height: values.length < 2 ? 70.0 : 150.0,
+              height: 68.0 * value.length,
               child: Scrollbar(
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
