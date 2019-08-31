@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/bloc/state/vip_state.dart';
@@ -155,7 +156,12 @@ class VipBottomSheet {
 
   void _addVip(BuildContext context, VipBloc vipBloc) {
     final name = nameController.text;
-
+    Fluttertoast.showToast(
+      msg: "Add new vip: $name",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+    );
     Navigator.pop(context);
     nameController.clear();
     vipBloc.dispatch(AddNewVip(name: name));
