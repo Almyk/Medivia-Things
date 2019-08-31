@@ -32,12 +32,19 @@ class OnlineListPage extends StatelessWidget {
             ),
             appBar: AppBar(
               actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    child: Icon(Icons.sort),
-                    onTap: () => onlineBloc.dispatch(SortOnline()),
-                  ),
+                Builder(
+                  builder: (context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Icon(Icons.sort),
+                        onTap: () {
+                          _showSortModeSnackBar(context);
+                          onlineBloc.dispatch(SortOnline());
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
               title: Column(
@@ -72,7 +79,8 @@ class OnlineListPage extends StatelessWidget {
       return Center(
         child: Text(
           "farrk has tiny hands",
-          style: TextStyle(fontSize: 24.0, color: Colors.black.withOpacity(0.2)),
+          style:
+              TextStyle(fontSize: 24.0, color: Colors.black.withOpacity(0.2)),
         ),
       );
     }
@@ -107,6 +115,38 @@ class OnlineListPage extends StatelessWidget {
             print(record.toString());
           },
         ),
+      ),
+    );
+  }
+
+  void _showSortModeSnackBar(BuildContext context) {
+    final scaffold = Scaffold.of(context);
+    String text;
+    final mode = (repository.sortMode + 1) % 3;
+
+    switch (mode) {
+      case 0:
+        text = "Sort online by level";
+        break;
+      case 1:
+        text = "Sort online by name";
+        break;
+      case 2:
+        text = "Sort online by online time";
+        break;
+      default:
+        text = "Something went wrong";
+    }
+
+    scaffold.removeCurrentSnackBar();
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Align(
+          alignment: Alignment.bottomCenter,
+          heightFactor: 1.0,
+          child: Text(text)
+          ),
+        duration: Duration(seconds: 2),
       ),
     );
   }

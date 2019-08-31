@@ -22,13 +22,10 @@ class VipBloc extends Bloc<VipEvent, VipState> {
       yield UpdatingVipList();
       repository.deleteVipByName(event.name);
     }
-
     if (event is UpdateVipListSuccess) {
-      // TODO show a success toast
       yield ShowingVipList();
     }
     if (event is UpdateVipListError) {
-      // TODO show an error toast
       yield ShowingVipList();
     }
     if (event is RefreshVipList) {
