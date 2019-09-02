@@ -70,68 +70,38 @@ class Repository {
     await updateVipList();
   }
 
-  Future vipUpdate() async {
-    for (int i = 0; i < 5; i++) {
-      List<String> names = [];
-      vipList.forEach((player) async {
+  Future updateVipList() async {
+    vipList.forEach(
+      (player) async {
         bool online = false;
-        for (final onlinePlayer in onlineLists[i]['players']) {
-          if (player.name == onlinePlayer['name']) {
-            if (player.status == "Offline") {
-              names.add(player.name);
+        var idx = serverNames.indexOf(player.world);
+
+        onlineLists[idx]['players'].forEach(
+          (onlinePlayer) async {
+            if (player.name == onlinePlayer['name']) {
+              if (player.status == "Offline") {
+                notifications.playerLoggedIn(idx, player.name);
+              }
+              print("${player.name} is online");
+              online = true;
+              player.name = onlinePlayer['name'];
+              player.level = onlinePlayer['level'].toString();
+              player.lastLogin = onlinePlayer['login'];
+              player.profession = onlinePlayer['vocation'];
+              player.status = "Online";
+              vipBloc.dispatch(RefreshVipList());
+              await playerProvider.insertNewVip(player);
             }
-            print("${player.name} is online");
-            online = true;
-            player.name = onlinePlayer['name'];
-            player.level = onlinePlayer['level'].toString();
-            player.lastLogin = onlinePlayer['login'];
-            player.profession = onlinePlayer['vocation'];
-            player.status = "Online";
-            vipBloc.dispatch(RefreshVipList());
-            await playerProvider.insertNewVip(player);
-          }
-        }
-        notifications.playerLoggedIn(i, names.join(", "));
-        if (player.world.toLowerCase() == serverNames[i] && !online) {
+          },
+        );
+
+        if (online == false && player.status != "Offline") {
           player.status = "Offline";
           vipBloc.dispatch(RefreshVipList());
           await playerProvider.insertNewVip(player);
         }
-      });
-    }
-    vipList = await playerProvider.getAllVip();
-    vipBloc.dispatch(UpdateVipListSuccess());
-  }
-
-  Future updateVipList() async {
-    vipList.forEach((player) async {
-      bool online = false;
-      for (int i = 0; i < 5; i++) {
-        onlineLists[i]['players'].forEach((onlinePlayer) async {
-          if (player.name == onlinePlayer['name']) {
-            if (player.status == "Offline") {
-              // TODO: create notification
-              notifications.playerLoggedIn(i, player.name);
-            }
-            print("${player.name} is online");
-            online = true;
-            player.name = onlinePlayer['name'];
-            player.level = onlinePlayer['level'].toString();
-            player.lastLogin = onlinePlayer['login'];
-            player.profession = onlinePlayer['vocation'];
-            player.status = "Online";
-            vipBloc.dispatch(RefreshVipList());
-            await playerProvider.insertNewVip(player);
-          }
-        });
-        if (online) break;
-      }
-      if (online == false && player.status != "Offline") {
-        player.status = "Offline";
-        vipBloc.dispatch(RefreshVipList());
-        await playerProvider.insertNewVip(player);
-      }
-    });
+      },
+    );
     vipList = await playerProvider.getAllVip();
     vipBloc.dispatch(UpdateVipListSuccess());
   }
