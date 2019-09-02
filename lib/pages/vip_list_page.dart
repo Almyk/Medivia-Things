@@ -25,48 +25,37 @@ class VipListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final vipBloc = BlocProvider.of<VipBloc>(context);
     return BlocBuilder(
-      bloc: vipBloc,
-      builder: (BuildContext context, VipState state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  child: Icon(Icons.add),
-                  onTap: () => vipBottomSheet.mainBottomSheet(context, vipBloc),
-                ),
-              )
-            ],
-          ),
-          drawer: MyDrawer(
-            repository: repository,
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildVipListItems(context, repository.vipList),
-            ],
-          ),
-        );
-      },
-    );
+        bloc: vipBloc,
+        builder: (BuildContext context, VipState state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(title),
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.add),
+                    onTap: () =>
+                        vipBottomSheet.mainBottomSheet(context, vipBloc),
+                  ),
+                )
+              ],
+            ),
+            drawer: MyDrawer(
+              repository: repository,
+            ),
+            body: _buildVipListItems(context, repository.vipList),
+          );
+        });
   }
 
   Widget _buildVipListItems(BuildContext context, List<Player> players) {
-    List<Widget> vipList = new List<Widget>();
-
-    for (final player in players) {
-      vipList.add(
-        _buildVipListItem(context, player),
-      );
-    }
-    return Expanded(
-      child: Scrollbar(
-        child: ListView(
-          children: vipList,
-        ),
+    return Scrollbar(
+      child: ListView.builder(
+        itemCount: players.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildVipListItem(context, players[index]);
+        },
       ),
     );
   }

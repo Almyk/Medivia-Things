@@ -31,6 +31,7 @@ class VipBloc extends Bloc<VipEvent, VipState> {
     }
     if (event is RefreshVipList) {
       yield UpdatingVipList();
+      yield ShowingVipList();
     }
   }
 }

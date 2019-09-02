@@ -22,7 +22,7 @@ class Repository {
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
   int sortMode = 0;
-  List<Player> vipList = [];
+  List<Player> vipList = new List();
   Timer onlineUpdateTimer;
 
   final Notifications notifications = Notifications();
@@ -70,70 +70,47 @@ class Repository {
     await updateVipList();
   }
 
-  Future vipUpdate() async {
-    for (int i = 0; i < 5; i++) {
-      List<String> names = [];
-      vipList.forEach((player) async {
-        bool online = false;
-        for (final onlinePlayer in onlineLists[i]['players']) {
-          if (player.name == onlinePlayer['name']) {
-            if (player.status == "Offline") {
-              names.add(player.name);
-            }
-            print("${player.name} is online");
-            online = true;
-            player.name = onlinePlayer['name'];
-            player.level = onlinePlayer['level'].toString();
-            player.lastLogin = onlinePlayer['login'];
-            player.profession = onlinePlayer['vocation'];
-            player.status = "Online";
-            vipBloc.dispatch(RefreshVipList());
-            await playerProvider.insertNewVip(player);
-          }
-        }
-        notifications.playerLoggedIn(i, names.join(", "));
-        if (player.world.toLowerCase() == serverNames[i] && !online) {
-          player.status = "Offline";
-          vipBloc.dispatch(RefreshVipList());
-          await playerProvider.insertNewVip(player);
-        }
-      });
-    }
-    vipList = await playerProvider.getAllVip();
-    vipBloc.dispatch(UpdateVipListSuccess());
-  }
-
   Future updateVipList() async {
-    vipList.forEach((player) async {
+    Map<int, List<String>> loginList = new Map<int, List<String>>();
+    for (Player player in vipList) {
       bool online = false;
-      for (int i = 0; i < 5; i++) {
-        onlineLists[i]['players'].forEach((onlinePlayer) async {
-          if (player.name == onlinePlayer['name']) {
-            if (player.status == "Offline") {
-              // TODO: create notification
-              notifications.playerLoggedIn(i, player.name);
+      var idx = serverNames.indexOf(player.world);
+
+      for (final onlinePlayer in onlineLists[idx]['players']) {
+        if (player.name == onlinePlayer['name']) {
+          if (player.status == "Offline") {
+            // add player name to notification list
+            if (!loginList.containsKey(idx)) {
+              loginList[idx] = List<String>();
             }
-            print("${player.name} is online");
-            online = true;
-            player.name = onlinePlayer['name'];
-            player.level = onlinePlayer['level'].toString();
-            player.lastLogin = onlinePlayer['login'];
-            player.profession = onlinePlayer['vocation'];
-            player.status = "Online";
-            vipBloc.dispatch(RefreshVipList());
-            await playerProvider.insertNewVip(player);
+            loginList[idx].add(player.name);
           }
-        });
-        if (online) break;
+          print("${player.name} is online");
+          online = true;
+          player.name = onlinePlayer['name'];
+          player.level = onlinePlayer['level'].toString();
+          player.lastLogin = onlinePlayer['login'];
+          player.profession = onlinePlayer['vocation'];
+          player.status = "Online";
+          // vipBloc.dispatch(RefreshVipList());
+          await playerProvider.insertNewVip(player);
+          break;
+        }
       }
       if (online == false && player.status != "Offline") {
         player.status = "Offline";
-        vipBloc.dispatch(RefreshVipList());
+        // vipBloc.dispatch(RefreshVipList());
         await playerProvider.insertNewVip(player);
       }
-    });
+    }
     vipList = await playerProvider.getAllVip();
-    vipBloc.dispatch(UpdateVipListSuccess());
+
+    for (final idx in loginList.keys) {
+      notifications.playerLoggedIn(idx, loginList[idx].join(", "));
+    }
+
+    // vipBloc.dispatch(UpdateVipListSuccess());
+    vipBloc.dispatch(RefreshVipList());
   }
 
   Future<Player> getPlayerInfo(String name) async {
