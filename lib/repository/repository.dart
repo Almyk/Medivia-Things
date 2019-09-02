@@ -71,38 +71,41 @@ class Repository {
   }
 
   Future updateVipList() async {
-    vipList.forEach(
-      (player) async {
-        bool online = false;
-        var idx = serverNames.indexOf(player.world);
+    Map<int, List<String>> loginList;
+    for (Player player in vipList) {
+      bool online = false;
+      var idx = serverNames.indexOf(player.world);
 
-        onlineLists[idx]['players'].forEach(
-          (onlinePlayer) async {
-            if (player.name == onlinePlayer['name']) {
-              if (player.status == "Offline") {
-                notifications.playerLoggedIn(idx, player.name);
-              }
-              print("${player.name} is online");
-              online = true;
-              player.name = onlinePlayer['name'];
-              player.level = onlinePlayer['level'].toString();
-              player.lastLogin = onlinePlayer['login'];
-              player.profession = onlinePlayer['vocation'];
-              player.status = "Online";
-              vipBloc.dispatch(RefreshVipList());
-              await playerProvider.insertNewVip(player);
-            }
-          },
-        );
-
-        if (online == false && player.status != "Offline") {
-          player.status = "Offline";
+      for (final onlinePlayer in onlineLists[idx]['players']) {
+        if (player.name == onlinePlayer['name']) {
+          if (player.status == "Offline") {
+            loginList[idx].add(player.name);
+            // notifications.playerLoggedIn(idx, player.name);
+          }
+          print("${player.name} is online");
+          online = true;
+          player.name = onlinePlayer['name'];
+          player.level = onlinePlayer['level'].toString();
+          player.lastLogin = onlinePlayer['login'];
+          player.profession = onlinePlayer['vocation'];
+          player.status = "Online";
           vipBloc.dispatch(RefreshVipList());
           await playerProvider.insertNewVip(player);
+          break;
         }
-      },
-    );
+      }
+      if (online == false && player.status != "Offline") {
+        player.status = "Offline";
+        vipBloc.dispatch(RefreshVipList());
+        await playerProvider.insertNewVip(player);
+      }
+    }
     vipList = await playerProvider.getAllVip();
+
+    for (final idx in loginList.keys) {
+      notifications.playerLoggedIn(idx, loginList[idx].join(", "));
+    }
+
     vipBloc.dispatch(UpdateVipListSuccess());
   }
 
