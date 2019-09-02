@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/bloc/state/vip_state.dart';
 import 'package:medivia_things/repository/repository.dart';
@@ -22,13 +23,10 @@ class VipBloc extends Bloc<VipEvent, VipState> {
       yield UpdatingVipList();
       repository.deleteVipByName(event.name);
     }
-
     if (event is UpdateVipListSuccess) {
-      // TODO show a success toast
       yield ShowingVipList();
     }
     if (event is UpdateVipListError) {
-      // TODO show an error toast
       yield ShowingVipList();
     }
     if (event is RefreshVipList) {

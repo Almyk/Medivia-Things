@@ -7,7 +7,7 @@ class Notifications {
         new FlutterLocalNotificationsPlugin();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('ic_launcher'); // TODO change icon
+        new AndroidInitializationSettings('launcher_icon');
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = new InitializationSettings(
@@ -16,7 +16,7 @@ class Notifications {
         onSelectNotification: onSelectNotification);
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
+        '$server', 'Vip List', 'Displays notifications when vip players login',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(

@@ -12,7 +12,8 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NavigationBloc navigationBloc = BlocProvider.of<NavigationBloc>(context);
+    final NavigationBloc navigationBloc =
+        BlocProvider.of<NavigationBloc>(context);
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -21,24 +22,37 @@ class MyDrawer extends StatelessWidget {
           Container(
             height: 80.0,
             child: DrawerHeader(
-              child: Text('Medivia Things',
-                style: TextStyle(fontSize: 18.0),),
+              child: Text(
+                'Medivia Things',
+                style: TextStyle(fontSize: 18.0),
+              ),
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.star, color: Colors.yellow[800],),
-            title: Text('Vip List',
-              style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
-            onTap: () => navigationBloc.dispatch(ShowVipList()),
+            leading: Icon(
+              Icons.star,
+              color: Colors.yellow[800],
+            ),
+            title: Text(
+              'Vip List',
+              style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+            ),
+            onTap: () {
+              navigationBloc.dispatch(ShowVipList());
+              Navigator.pop(context);
+            },
           ),
           Center(
               child: Text(
-                'ONLINE',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, fontFamily: "Times"),
-              )),
+            'ONLINE',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+                fontFamily: "Times"),
+          )),
           Container(
             decoration: BoxDecoration(
                 border: Border(
@@ -48,8 +62,10 @@ class MyDrawer extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   contentPadding: EdgeInsets.only(left: 24.0),
-                  title: Text('Destiny' + ' (${repository.onlineCounts[destiny]})',
-                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  title: Text(
+                    'Destiny' + ' (${repository.onlineCounts[destiny]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+                  ),
                   onTap: () {
                     navigationBloc.dispatch(ShowOnlineDestiny());
                     Navigator.pop(context);
@@ -57,8 +73,10 @@ class MyDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.only(left: 24.0),
-                  title: Text('Legacy' + ' (${repository.onlineCounts[legacy]})',
-                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  title: Text(
+                    'Legacy' + ' (${repository.onlineCounts[legacy]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+                  ),
                   onTap: () {
                     navigationBloc.dispatch(ShowOnlineLegacy());
                     Navigator.pop(context);
@@ -66,8 +84,10 @@ class MyDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.only(left: 24.0),
-                  title: Text('Pendulum' + ' (${repository.onlineCounts[pendulum]})',
-                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  title: Text(
+                    'Pendulum' + ' (${repository.onlineCounts[pendulum]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+                  ),
                   onTap: () {
                     navigationBloc.dispatch(ShowOnlinePendulum());
                     Navigator.pop(context);
@@ -75,8 +95,10 @@ class MyDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.only(left: 24.0),
-                  title: Text('Prophecy' + ' (${repository.onlineCounts[prophecy]})',
-                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                  title: Text(
+                    'Prophecy' + ' (${repository.onlineCounts[prophecy]})',
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+                  ),
                   onTap: () {
                     navigationBloc.dispatch(ShowOnlineProphecy());
                     Navigator.pop(context);
@@ -86,7 +108,8 @@ class MyDrawer extends StatelessWidget {
                   contentPadding: EdgeInsets.only(left: 24.0),
                   title: Text(
                     'Strife' + ' (${repository.onlineCounts[strife]})',
-                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),),
+                    style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+                  ),
                   onTap: () {
                     navigationBloc.dispatch(ShowOnlineStrife());
                     Navigator.pop(context);

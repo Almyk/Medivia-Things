@@ -22,7 +22,8 @@ class OnlineBloc extends Bloc<OnlineEvent, OnlineState> {
     if (event is SortOnline) {
       repository.sortMode = (repository.sortMode + 1) % 3;
       print("sortMode: ${repository.sortMode}");
-      await repository.sharedPreferences.setInt("sortMode", repository.sortMode);
+      await repository.sharedPreferences
+          .setInt("sortMode", repository.sortMode);
       repository.sortOnline();
     }
   }
