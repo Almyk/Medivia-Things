@@ -24,15 +24,14 @@ class VipBloc extends Bloc<VipEvent, VipState> {
     }
 
     if (event is UpdateVipListSuccess) {
-      // TODO show a success toast
       yield ShowingVipList();
     }
     if (event is UpdateVipListError) {
-      // TODO show an error toast
       yield ShowingVipList();
     }
     if (event is RefreshVipList) {
       yield UpdatingVipList();
+      yield ShowingVipList();
     }
   }
 }

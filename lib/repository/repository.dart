@@ -92,14 +92,14 @@ class Repository {
           player.lastLogin = onlinePlayer['login'];
           player.profession = onlinePlayer['vocation'];
           player.status = "Online";
-          vipBloc.dispatch(RefreshVipList());
+          // vipBloc.dispatch(RefreshVipList());
           await playerProvider.insertNewVip(player);
           break;
         }
       }
       if (online == false && player.status != "Offline") {
         player.status = "Offline";
-        vipBloc.dispatch(RefreshVipList());
+        // vipBloc.dispatch(RefreshVipList());
         await playerProvider.insertNewVip(player);
       }
     }
@@ -109,7 +109,8 @@ class Repository {
       notifications.playerLoggedIn(idx, loginList[idx].join(", "));
     }
 
-    vipBloc.dispatch(UpdateVipListSuccess());
+    // vipBloc.dispatch(UpdateVipListSuccess());
+    vipBloc.dispatch(RefreshVipList());
   }
 
   Future<Player> getPlayerInfo(String name) async {
