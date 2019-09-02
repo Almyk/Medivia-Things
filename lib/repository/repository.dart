@@ -22,7 +22,7 @@ class Repository {
   final List<Map<String, dynamic>> onlineLists = new List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
   int sortMode = 0;
-  List<Player> vipList = [];
+  List<Player> vipList = new List();
   Timer onlineUpdateTimer;
 
   final Notifications notifications = Notifications();
@@ -71,7 +71,7 @@ class Repository {
   }
 
   Future updateVipList() async {
-    Map<int, List<String>> loginList;
+    Map<int, List<String>> loginList = new Map<int, List<String>>();
     for (Player player in vipList) {
       bool online = false;
       var idx = serverNames.indexOf(player.world);
@@ -79,8 +79,11 @@ class Repository {
       for (final onlinePlayer in onlineLists[idx]['players']) {
         if (player.name == onlinePlayer['name']) {
           if (player.status == "Offline") {
+            // add player name to notification list
+            if (!loginList.containsKey(idx)) {
+              loginList[idx] = List<String>();
+            }
             loginList[idx].add(player.name);
-            // notifications.playerLoggedIn(idx, player.name);
           }
           print("${player.name} is online");
           online = true;
