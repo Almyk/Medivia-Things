@@ -6,6 +6,7 @@ import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
 import 'package:medivia_things/bloc/state/navigation_state.dart';
+import 'package:medivia_things/pages/bedmage_page.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/pages/vip_list_page.dart';
 import 'package:medivia_things/utils/drawer.dart';
@@ -96,9 +97,16 @@ class MyApp extends StatelessWidget {
               navigationBloc: navigationBloc,
               repository: repository,
             );
-          } else {
+          } 
+          else if (state is BedmageList) {
+            return BedmagePage(
+              title: "Bedmages",
+              repository: repository,
+            );
+          } 
+          else {
             return VipListPage(
-              title: "Medivia Things",
+              title: "Vip List",
               navigationBloc: navigationBloc,
               repository: repository,
             );

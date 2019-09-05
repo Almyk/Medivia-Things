@@ -9,7 +9,8 @@ class Bedmage extends Equatable {
 
   Bedmage.fromMap(Map map)
   : this.name = map['name'],
-    this.timeLeft = map['time_left'];
+    this.timeLeft = map['time_left'],
+    super([map['name'], map['time_left']]);
 
   Map<String, dynamic> toMap(Bedmage bedmage) {
     return {

@@ -11,6 +11,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     if (event is ShowVipList) {
       yield VipList();
     }
+    if (event is ShowBedmageList) {
+      yield BedmageList();
+    }
     if (event is ShowOnlineDestiny) {
       yield OnlineListDestiny();
     }
