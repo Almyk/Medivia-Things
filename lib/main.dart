@@ -63,11 +63,13 @@ void main() {
           return vipBloc;
         },
       ),
-      BlocProvider<BedmageBloc>(builder: (BuildContext context) {
-        final bedmageBloc = BedmageBloc(repository: repository);
-        repository.bedmageBloc = bedmageBloc;
-        return bedmageBloc;
-      },)
+      BlocProvider<BedmageBloc>(
+        builder: (BuildContext context) {
+          final bedmageBloc = BedmageBloc(repository: repository);
+          repository.bedmageBloc = bedmageBloc;
+          return bedmageBloc;
+        },
+      )
     ],
     child: MyApp(
       repository: repository,
@@ -103,14 +105,12 @@ class MyApp extends StatelessWidget {
               navigationBloc: navigationBloc,
               repository: repository,
             );
-          } 
-          else if (state is BedmageList) {
+          } else if (state is BedmageList) {
             return BedmagePage(
               title: "Bedmages",
               repository: repository,
             );
-          } 
-          else {
+          } else {
             return VipListPage(
               title: "Vip List",
               navigationBloc: navigationBloc,

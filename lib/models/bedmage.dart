@@ -5,15 +5,26 @@ class Bedmage extends Equatable {
   final String name;
   final int interval;
   String lastLogin;
-  int timeLeft;
+  String timeLeft;
 
-  Bedmage({@required this.name, @required this.interval})
-      : super([name, interval]);
+  Bedmage(
+      {@required this.name,
+      @required this.interval,
+      this.lastLogin = "",
+      this.timeLeft = "Calculating..."})
+      : super([name, interval, lastLogin, timeLeft]);
 
   Bedmage.fromMap(Map map)
       : this.name = map['name'],
         this.interval = map['interval'],
-        super([map['name'], map['interval']]);
+        this.lastLogin = map['last_login'],
+        this.timeLeft = map['time_left'],
+        super([
+          map['name'],
+          map['interval'],
+          map['last_login'],
+          map['time_left']
+        ]);
 
   Map<String, dynamic> toMap(Bedmage bedmage) {
     return {
@@ -33,8 +44,15 @@ class Bedmage extends Equatable {
       minutes = 60 * number;
     } else if (['minute', 'minutes'].contains(temp[1])) {
       minutes = number;
+    } else if (['day', 'days'].contains(temp[1])) {
+      minutes = 60 * 24 * number;
     }
 
-    timeLeft = interval - number;
+    var _timeleft = interval - minutes;
+    if (_timeleft <= 0) {
+      timeLeft = "Due";
+    } else {
+      timeLeft = "$_timeleft min";
+    }
   }
 }

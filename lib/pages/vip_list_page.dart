@@ -34,7 +34,10 @@ class VipListPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
                   child: GestureDetector(
-                    child: Icon(Icons.add, size: 30,),
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                    ),
                     onTap: () =>
                         vipBottomSheet.mainBottomSheet(context, vipBloc),
                   ),
@@ -104,9 +107,10 @@ class VipBottomSheet {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-              left: 2.0,
-              right: 2.0,
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+            left: 2.0,
+            right: 2.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
           child: _addVipWidget(context, vipBloc),
         );
       },

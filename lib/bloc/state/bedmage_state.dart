@@ -7,8 +7,13 @@ abstract class BedmageState extends Equatable {
 }
 
 class ShowBedmages extends BedmageState {
-  ShowBedmages({@required props}) : super();
+  ShowBedmages({@required props}) : super(props);
 
   @override
   toString() => "ShowBedmages";
+}
+
+class UpdatingBedmages extends BedmageState {
+  @override
+  toString() => "UpdatingBedmages";
 }
