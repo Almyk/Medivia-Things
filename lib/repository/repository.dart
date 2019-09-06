@@ -7,6 +7,7 @@ import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
 import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
+import 'package:medivia_things/models/bedmage.dart';
 import 'package:medivia_things/utils/constants.dart';
 import 'package:medivia_things/models/player.dart';
 import 'package:medivia_things/utils/notifications.dart';
@@ -19,11 +20,15 @@ class Repository {
 
   final PlayerProvider playerProvider = PlayerProvider();
 
-  final List<Map<String, dynamic>> onlineLists = new List(5);
+  final List<Map<String, dynamic>> onlineLists = List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
   int sortMode = 0;
-  List<Player> vipList = new List();
+
+  List<Player> vipList = List();
+  List<Bedmage> bedmageList = List();
+
   Timer onlineUpdateTimer;
+  Timer bedmageUpdateTimer;
 
   final Notifications notifications = Notifications();
   SharedPreferences sharedPreferences;
@@ -32,9 +37,15 @@ class Repository {
     initPreferences();
     initVipList();
     getOnlineLists();
+    initTimers();
+    print("Started online list updater");
+  }
+
+  void initTimers() {
     onlineUpdateTimer =
         Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
-    print("Started online list updater");
+    bedmageUpdateTimer =
+        Timer.periodic(Duration(minutes: 1), (Timer t) => updateBedmages());
   }
 
   Future initPreferences() async {
@@ -204,5 +215,15 @@ class Repository {
       });
       onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
     }
+  }
+
+  Future updateBedmages() async {
+    for (final bedmage in bedmageList) {
+      var response = await http.get(playerUrl + bedmage.name); // TODO make this call a method
+      Map body = json.decode(response.body);
+      bedmage.lastLogin = body['last login'];
+      bedmage.calculateTimeLeft();
+    }
+    // TODO: dispatch event
   }
 }
