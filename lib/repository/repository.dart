@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:medivia_things/bloc/blocs/bedmage_bloc.dart';
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
+import 'package:medivia_things/bloc/event/bedmage_event.dart';
 import 'package:medivia_things/bloc/event/online_event.dart';
 import 'package:medivia_things/bloc/event/vip_event.dart';
 import 'package:medivia_things/models/bedmage.dart';
@@ -17,6 +19,7 @@ class Repository {
   OnlineBloc onlineBloc;
   NavigationBloc navigationBloc;
   VipBloc vipBloc;
+  BedmageBloc bedmageBloc;
 
   final PlayerProvider playerProvider = PlayerProvider();
 
@@ -196,34 +199,37 @@ class Repository {
       "hours"
     ];
     for (int i = 0; i < 5; i++) {
-      onlineLists[i]['players'].sort((a, b) {
-        List<String> A = a['login'].split(" ");
-        List<String> B = b['login'].split(" ");
-        int aInt = int.tryParse(A[0]);
-        int bInt = int.tryParse(B[0]);
+      onlineLists[i]['players'].sort(
+        (a, b) {
+          List<String> A = a['login'].split(" ");
+          List<String> B = b['login'].split(" ");
+          int aInt = int.tryParse(A[0]);
+          int bInt = int.tryParse(B[0]);
 
-        if (time.indexOf(A[1]) > time.indexOf(B[1])) {
-          return -1;
-        } else if (time.indexOf(A[1]) < time.indexOf(B[1])) {
+          if (time.indexOf(A[1]) > time.indexOf(B[1])) {
+            return -1;
+          } else if (time.indexOf(A[1]) < time.indexOf(B[1])) {
+            return 1;
+          }
+
+          if (aInt >= bInt) {
+            return -1;
+          }
           return 1;
-        }
-
-        if (aInt >= bInt) {
-          return -1;
-        }
-        return 1;
-      });
+        },
+      );
       onlineBloc.dispatch(OnlineUpdate(server: serverNames[i]));
     }
   }
 
   Future updateBedmages() async {
     for (final bedmage in bedmageList) {
-      var response = await http.get(playerUrl + bedmage.name); // TODO make this call a method
+      var response = await http
+          .get(playerUrl + bedmage.name); // TODO make this call a method
       Map body = json.decode(response.body);
       bedmage.lastLogin = body['last login'];
       bedmage.calculateTimeLeft();
     }
-    // TODO: dispatch event
+    bedmageBloc.dispatch(BedmagesUpdated());
   }
 }

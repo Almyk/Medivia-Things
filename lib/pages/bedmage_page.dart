@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medivia_things/bloc/blocs/bedmage_bloc.dart';
+import 'package:medivia_things/bloc/state/bedmage_state.dart';
 import 'package:medivia_things/models/bedmage.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/utils/drawer.dart';
@@ -11,27 +14,36 @@ class BedmagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: GestureDetector(
-              child: Icon(Icons.add, size: 30,),
-              onTap: () => print("action tappin"),
-            ),
-          )
-        ],
-      ),
-      drawer: MyDrawer(
-        repository: repository,
-      ),
-      body: ListView.builder(
-        itemCount: repository.bedmageList.length,
-        itemBuilder: (context, i) =>
-            _buildBedmageListItem(context, repository.bedmageList[i]),
-      ),
+    final bedmageBloc = BlocProvider.of<BedmageBloc>(context);
+    return BlocBuilder(
+      bloc: bedmageBloc,
+      builder: (BuildContext context, BedmageState state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                  onTap: () => print("action tappin"), // TODO: bottomsheet to add bedmage
+                ),
+              )
+            ],
+          ),
+          drawer: MyDrawer(
+            repository: repository,
+          ),
+          body: ListView.builder(
+            itemCount: repository.bedmageList.length,
+            itemBuilder: (context, i) =>
+                _buildBedmageListItem(context, repository.bedmageList[i]),
+          ),
+        );
+      },
     );
   }
 

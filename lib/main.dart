@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medivia_things/bloc/blocs/bedmage_bloc.dart';
 
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
@@ -62,6 +63,11 @@ void main() {
           return vipBloc;
         },
       ),
+      BlocProvider<BedmageBloc>(builder: (BuildContext context) {
+        final bedmageBloc = BedmageBloc(repository: repository);
+        repository.bedmageBloc = bedmageBloc;
+        return bedmageBloc;
+      },)
     ],
     child: MyApp(
       repository: repository,
