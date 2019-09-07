@@ -58,7 +58,7 @@ class Repository {
     onlineUpdateTimer =
         Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     bedmageUpdateTimer =
-        Timer.periodic(Duration(seconds: 31), (Timer t) => updateBedmages());
+        Timer.periodic(Duration(seconds: 60), (Timer t) => updateBedmages());
     vipListUpdateTimer =
         Timer.periodic(Duration(minutes: 30), (Timer t) => updateAllVipInfo());
   }
@@ -290,6 +290,7 @@ class Repository {
       String body = notificationList.join(", ");
       notifications.bedmageDue(body);
     }
+    bedmageList = await bedmageProvider.getAllBedmages();
     bedmageBloc.dispatch(BedmagesUpdated());
   }
 }
