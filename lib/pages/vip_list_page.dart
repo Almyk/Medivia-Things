@@ -283,13 +283,29 @@ class PlayerBottomSheet {
             );
           },
         ),
-        GestureDetector(
-          child: Icon(
-            Icons.close,
-            color: Colors.red,
-            size: 35.0,
-          ),
-          onTap: () => Navigator.pop(_context),
+        Row(
+          children: <Widget>[
+            GestureDetector(
+              child: Icon(
+                Icons.sync,
+                color: Colors.blue,
+                size: 35.0,
+              ),
+              onTap: () {
+                Navigator.pop(_context);
+                var repository = Repository();
+                repository.updateVipByName(player.name);
+              },
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.close,
+                color: Colors.red,
+                size: 35.0,
+              ),
+              onTap: () => Navigator.pop(_context),
+            ),
+          ],
         )
       ],
     );

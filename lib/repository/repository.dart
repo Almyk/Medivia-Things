@@ -16,6 +16,12 @@ import 'package:medivia_things/utils/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
+  Repository._internal();
+  static final Repository _sInstance = new Repository._internal();
+  factory Repository() {
+    return _sInstance;
+  }
+
   OnlineBloc onlineBloc;
   NavigationBloc navigationBloc;
   VipBloc vipBloc;
@@ -32,6 +38,7 @@ class Repository {
 
   Timer onlineUpdateTimer;
   Timer bedmageUpdateTimer;
+  Timer vipListUpdateTimer;
 
   final Notifications notifications = Notifications();
   SharedPreferences sharedPreferences;
@@ -41,6 +48,7 @@ class Repository {
     initVipList();
     getOnlineLists();
     initTimers();
+    updateAllVipInfo();
     print("Started online list updater");
   }
 
@@ -48,7 +56,9 @@ class Repository {
     onlineUpdateTimer =
         Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     bedmageUpdateTimer =
-        Timer.periodic(Duration(seconds: 45), (Timer t) => updateBedmages());
+        Timer.periodic(Duration(seconds: 31), (Timer t) => updateBedmages());
+    vipListUpdateTimer =
+        Timer.periodic(Duration(minutes: 30), (Timer t) => updateAllVipInfo());
   }
 
   Future initPreferences() async {
@@ -147,6 +157,24 @@ class Repository {
     } else {
       vipBloc.dispatch(UpdateVipListError());
     }
+  }
+
+  Future updateVipByName(String name) async {
+    await addVipByName(name);
+    vipBloc.dispatch(RefreshVipList());
+  }
+
+  void updateAllVipInfo() async {
+    Future.delayed(
+      Duration(seconds: 5),
+      () {
+        print("update all vip info");
+        var _temp = vipList.toList();
+        for (Player player in _temp) {
+          updateVipByName(player.name);
+        }
+      },
+    );
   }
 
   Future deleteVipByName(String name) async {
