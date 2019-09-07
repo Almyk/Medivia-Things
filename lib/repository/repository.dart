@@ -106,14 +106,13 @@ class Repository {
           player.lastLogin = onlinePlayer['login'];
           player.profession = onlinePlayer['vocation'];
           player.status = "Online";
-          // vipBloc.dispatch(RefreshVipList());
           await playerProvider.insertNewVip(player);
           break;
         }
       }
       if (online == false && player.status != "Offline") {
+        print("${player.name} logged out");
         player.status = "Offline";
-        // vipBloc.dispatch(RefreshVipList());
         await playerProvider.insertNewVip(player);
       }
     }
@@ -123,7 +122,6 @@ class Repository {
       notifications.playerLoggedIn(idx, loginList[idx].join(", "));
     }
 
-    // vipBloc.dispatch(UpdateVipListSuccess());
     vipBloc.dispatch(RefreshVipList());
   }
 
@@ -227,8 +225,8 @@ class Repository {
       var response = await http
           .get(playerUrl + bedmage.name); // TODO make this call a method
       Map body = json.decode(response.body);
-      bedmage.lastLogin = body['last login'];
-      bedmage.calculateTimeLeft();
+      var player = Player.fromMap(body);
+      bedmage.calculateTimeLeft(player);
     }
     bedmageBloc.dispatch(BedmagesUpdated());
   }

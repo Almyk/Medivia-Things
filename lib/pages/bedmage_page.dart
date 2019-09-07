@@ -51,6 +51,12 @@ class BedmagePage extends StatelessWidget {
   }
 
   Widget _buildBedmageListItem(BuildContext context, Bedmage bedmage) {
+    String _timeLeft = "Time Left: ${bedmage.timeLeft} min";
+    if (bedmage.timeLeft == 0) {
+      _timeLeft = "Time Left: Due";
+    } else if (bedmage.timeLeft == -1) {
+      _timeLeft = "Time Left: ${bedmage.interval} min";
+    }
     return Padding(
       key: ValueKey(bedmage.name),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
@@ -60,7 +66,7 @@ class BedmagePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
           title: Text(bedmage.name),
-          trailing: Text("Time Left: ${bedmage.timeLeft}"),
+          trailing: Text("$_timeLeft"),
           onTap: () {
             print(bedmage.toString());
           },

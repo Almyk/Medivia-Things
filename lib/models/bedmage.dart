@@ -1,58 +1,109 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medivia_things/models/player.dart';
 
 class Bedmage extends Equatable {
-  final String name;
-  final int interval;
-  String lastLogin;
-  String timeLeft;
+  String name;
+  int interval;
+  int logoutTime;
+  int timeLeft;
+  bool online;
+  bool notified;
 
   Bedmage(
       {@required this.name,
       @required this.interval,
-      this.lastLogin = "",
-      this.timeLeft = "Calculating..."})
-      : super([name, interval, lastLogin, timeLeft]);
+      this.logoutTime = -1,
+      this.timeLeft = -1,
+      this.online = false,
+      this.notified = false})
+      : super([name, interval, logoutTime, timeLeft]);
 
   Bedmage.fromMap(Map map)
       : this.name = map['name'],
         this.interval = map['interval'],
-        this.lastLogin = map['last_login'],
+        this.logoutTime = map['logout_time'],
         this.timeLeft = map['time_left'],
+        this.online = map['online'],
+        this.notified = map['notified'],
         super([
           map['name'],
           map['interval'],
-          map['last_login'],
-          map['time_left']
+          map['logout_time'],
+          map['time_left'],
+          map['online'],
+          map['notified']
         ]);
 
   Map<String, dynamic> toMap(Bedmage bedmage) {
     return {
       'name': name,
       'interval': interval,
-      'last_login': lastLogin,
-      'time_left': timeLeft
+      'logout_time': logoutTime,
+      'time_left': timeLeft,
+      'online': online,
+      'notified': notified
     };
   }
 
-  calculateTimeLeft() {
-    int minutes = 0;
-    List<String> temp = lastLogin.split(' ');
-    var number = int.tryParse(temp[0]);
-
-    if (['hour', 'hours'].contains(temp[1])) {
-      minutes = 60 * number;
-    } else if (['minute', 'minutes'].contains(temp[1])) {
-      minutes = number;
-    } else if (['day', 'days'].contains(temp[1])) {
-      minutes = 60 * 24 * number;
+  calculateTimeLeft(Player player) {
+    if (name != player.name) {
+      // TODO delete bedmage
+      name = player.name;
     }
-
-    var _timeleft = interval - minutes;
-    if (_timeleft <= 0) {
-      timeLeft = "Due";
+    if (online && player.status == "Offline") {
+      // was online and is now offline
+      online = false;
+      notified = false;
+      print("Bedmage $name logged out");
+      logoutTime = DateTime.now().millisecondsSinceEpoch;
+      timeLeft = interval; // set timeleft to original interval
+    } else if (player.status == "Online") {
+      // bedmage is online
+      online = true;
+      notified = false;
+      timeLeft = -1;
     } else {
-      timeLeft = "$_timeleft min";
+      // bedmage is offline
+      int time = DateTime.now().millisecondsSinceEpoch;
+
+      int theoLogoutTime = theoreticalLogoutTime(player.lastLogin, time);
+
+      if (logoutTime < theoLogoutTime) {
+        // logged in and out without us noticing
+        logoutTime = theoLogoutTime;
+      }
+
+      var _timeLeft = interval - ((time - logoutTime) ~/ (60 * 1000));
+
+      if (_timeLeft > 0) {
+        timeLeft = _timeLeft;
+        notified = false;
+      } else {
+        timeLeft = 0;
+        if (!notified) {
+          // TODO create a notification
+        }
+      }
     }
+    // TODO add to DB here
+  }
+
+  int theoreticalLogoutTime(String lastLogin, int time) {
+    List<String> _lastLogin = lastLogin.split(" ");
+    int number = int.tryParse(_lastLogin[0]);
+    int theoLogoutTime;
+
+    if (['second', 'seconds'].contains(_lastLogin[1])) {
+      theoLogoutTime = time - (number * 1000);
+    } else if (['minute', 'minutes'].contains(_lastLogin[1])) {
+      theoLogoutTime = time - (number * 60 * 1000);
+    } else if (['hour', 'hours'].contains(_lastLogin[1])) {
+      theoLogoutTime = time - (number * 60 * 60 * 1000);
+    } else {
+      theoLogoutTime = -1;
+    }
+
+    return theoLogoutTime;
   }
 }
