@@ -28,6 +28,7 @@ class Repository {
   BedmageBloc bedmageBloc;
 
   final PlayerProvider playerProvider = PlayerProvider();
+  final BedmageProvider bedmageProvider = BedmageProvider();
 
   final List<Map<String, dynamic>> onlineLists = List(5);
   List<int> onlineCounts = [0, 0, 0, 0, 0];
@@ -46,6 +47,7 @@ class Repository {
   void init() {
     initPreferences();
     initVipList();
+    initBedmageList();
     getOnlineLists();
     initTimers();
     updateAllVipInfo();
@@ -73,6 +75,14 @@ class Repository {
       vipBloc.dispatch(RefreshVipList());
       vipList = await playerProvider.getAllVip();
       vipBloc.dispatch(UpdateVipListSuccess());
+    });
+  }
+
+  Future initBedmageList() async {
+    await bedmageProvider.initDB();
+    Future.delayed(Duration(milliseconds: 600), () async {
+      bedmageList = await bedmageProvider.getAllBedmages();
+      bedmageBloc.dispatch(BedmagesUpdated());
     });
   }
 
@@ -248,18 +258,33 @@ class Repository {
     }
   }
 
+  Future addBedmage(Bedmage bedmage) async {
+    await bedmageProvider.insertBedmage(bedmage);
+    bedmageList = await bedmageProvider.getAllBedmages();
+  }
+
+  Future removeBedmage(String name) async {
+    await bedmageProvider.deleteBedmage(name);
+    bedmageList = await bedmageProvider.getAllBedmages();
+  }
+
   Future updateBedmages() async {
     List<String> notificationList = [];
     for (final bedmage in bedmageList) {
-      var response = await http
-          .get(playerUrl + bedmage.name); // TODO make this call a method
+      var response = await http.get(playerUrl + bedmage.name);
       Map body = json.decode(response.body);
       var player = Player.fromMap(body);
       var isDue = bedmage.calculateTimeLeft(player);
 
+      if (bedmage.name != player.name) {
+        await bedmageProvider.deleteBedmage(bedmage.name);
+        bedmage.name = player.name;
+      }
+
       if (isDue) {
         notificationList.add(bedmage.name);
       }
+      addBedmage(bedmage);
     }
     if (notificationList.length > 0) {
       String body = notificationList.join(", ");

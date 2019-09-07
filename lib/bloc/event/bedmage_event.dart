@@ -17,3 +17,12 @@ class AddBedmage extends BedmageEvent {
   @override
   toString() => "AddBedmage <$name:$interval>";
 }
+
+class RemoveBedmage extends BedmageEvent {
+  final String name;
+
+  RemoveBedmage({@required this.name});
+
+  @override
+  toString() => "RemoveBedmage <$name>";
+}

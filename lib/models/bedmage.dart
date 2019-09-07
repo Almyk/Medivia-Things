@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medivia_things/models/player.dart';
+import 'package:medivia_things/utils/constants.dart';
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart';
 
 class Bedmage extends Equatable {
   String name;
@@ -24,8 +27,8 @@ class Bedmage extends Equatable {
         this.interval = map['interval'],
         this.logoutTime = map['logout_time'],
         this.timeLeft = map['time_left'],
-        this.online = map['online'],
-        this.notified = map['notified'],
+        this.online = map['online'] == 1 ? true : false,
+        this.notified = map['notified'] == 1 ? true : false,
         super([
           map['name'],
           map['interval'],
@@ -35,7 +38,7 @@ class Bedmage extends Equatable {
           map['notified']
         ]);
 
-  Map<String, dynamic> toMap(Bedmage bedmage) {
+  Map<String, dynamic> toMap() {
     return {
       'name': name,
       'interval': interval,
@@ -48,10 +51,6 @@ class Bedmage extends Equatable {
 
   bool calculateTimeLeft(Player player) {
     bool due = false;
-    if (name != player.name) {
-      // TODO delete bedmage
-      name = player.name;
-    }
     if (online && player.status == "Offline") {
       // was online and is now offline
       online = false;
@@ -108,5 +107,53 @@ class Bedmage extends Equatable {
     }
 
     return theoLogoutTime;
+  }
+}
+
+class BedmageProvider {
+  static Database _db;
+
+  Future<Database> get database async {
+    if (_db != null) {
+      return _db;
+    }
+    _db = await initDB();
+    return _db;
+  }
+
+  Future initDB() async {
+    String path = p.join(await getDatabasesPath(), "bedmage_db");
+    _db = await openDatabase(path, version: 1, onCreate: _onCreate);
+  }
+
+  _onCreate(Database db, int version) async {
+    await db.execute("create table $bedmageTableName ("
+        "name text primary key,"
+        "interval integer,"
+        "logout_time integer,"
+        "time_left integer,"
+        "online integer,"
+        "notified integer)");
+  }
+
+  Future<int> insertBedmage(Bedmage bedmage) async {
+    final db = await database;
+    int result = await db.insert(bedmageTableName, bedmage.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return result;
+  }
+
+  Future<List<Bedmage>> getAllBedmages() async {
+    final db = await database;
+    var result = await db.query(bedmageTableName, orderBy: "name ASC");
+
+    List<Bedmage> bedmageList =
+        result.isNotEmpty ? result.map((b) => Bedmage.fromMap(b)).toList() : [];
+    return bedmageList;
+  }
+
+  Future deleteBedmage(String name) async {
+    final db = await database;
+    await db.delete(bedmageTableName, where: "name = ?", whereArgs: [name]);
   }
 }

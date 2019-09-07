@@ -11,12 +11,13 @@ class BedmagePage extends StatelessWidget {
   final String title;
   final Repository repository;
   final BedmageBottomSheet bedmageBottomSheet = BedmageBottomSheet();
+  BedmageBloc bedmageBloc;
 
   BedmagePage({@required this.title, @required this.repository});
 
   @override
   Widget build(BuildContext context) {
-    final bedmageBloc = BlocProvider.of<BedmageBloc>(context);
+    bedmageBloc = BlocProvider.of<BedmageBloc>(context);
     return BlocBuilder(
       bloc: bedmageBloc,
       builder: (BuildContext context, BedmageState state) {
@@ -57,19 +58,24 @@ class BedmagePage extends StatelessWidget {
     } else if (bedmage.timeLeft == -1) {
       _timeLeft = "Time Left: ${bedmage.interval} min";
     }
-    return Padding(
+    return Dismissible(
       key: ValueKey(bedmage.name),
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5.0)),
-        child: ListTile(
-          title: Text(bedmage.name),
-          trailing: Text("$_timeLeft"),
-          onTap: () {
-            print(bedmage.toString());
-          },
+      onDismissed: (direction) {
+        bedmageBloc.dispatch(RemoveBedmage(name: bedmage.name));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(5.0)),
+          child: ListTile(
+            title: Text(bedmage.name),
+            trailing: Text("$_timeLeft"),
+            onTap: () {
+              print(bedmage.toString());
+            },
+          ),
         ),
       ),
     );
@@ -123,7 +129,7 @@ class BedmageBottomSheet {
           child: Text("ADD"),
           color: Theme.of(context).colorScheme.primaryVariant,
           onPressed: () {
-            nameController.text.isNotEmpty
+            (nameController.text.isNotEmpty && intervalController.text.isNotEmpty)
                 ? _addBedmage(context, bedmageBloc)
                 : Navigator.pop(context);
           },
