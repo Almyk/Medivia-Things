@@ -45,6 +45,19 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            leading: Icon(
+              Icons.hotel,
+            ),
+            title: Text(
+              'Bedmages',
+              style: TextStyle(fontFamily: "Times", fontSize: 18.0),
+            ),
+            onTap: () {
+              navigationBloc.dispatch(ShowBedmageList());
+              Navigator.pop(context);
+            },
+          ),
           Center(
               child: Text(
             'ONLINE',

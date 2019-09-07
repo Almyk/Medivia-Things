@@ -9,3 +9,4 @@ const onlineUrl = 'http://almy.iptime.org:5000/medivia/online/';
 const playerUrl = 'https://medapi.herokuapp.com/player_info/';
 
 const vipListTableName = 'VipList';
+const bedmageTableName = 'Bedmage';

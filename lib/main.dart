@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medivia_things/bloc/blocs/bedmage_bloc.dart';
 
 import 'package:medivia_things/bloc/blocs/navigation_bloc.dart';
 import 'package:medivia_things/bloc/blocs/online_bloc.dart';
 import 'package:medivia_things/bloc/blocs/vip_bloc.dart';
 import 'package:medivia_things/bloc/state/navigation_state.dart';
+import 'package:medivia_things/pages/bedmage_page.dart';
 import 'package:medivia_things/repository/repository.dart';
 import 'package:medivia_things/pages/vip_list_page.dart';
 import 'package:medivia_things/utils/drawer.dart';
@@ -61,6 +63,13 @@ void main() {
           return vipBloc;
         },
       ),
+      BlocProvider<BedmageBloc>(
+        builder: (BuildContext context) {
+          final bedmageBloc = BedmageBloc(repository: repository);
+          repository.bedmageBloc = bedmageBloc;
+          return bedmageBloc;
+        },
+      )
     ],
     child: MyApp(
       repository: repository,
@@ -96,9 +105,14 @@ class MyApp extends StatelessWidget {
               navigationBloc: navigationBloc,
               repository: repository,
             );
+          } else if (state is BedmageList) {
+            return BedmagePage(
+              title: "Bedmages",
+              repository: repository,
+            );
           } else {
             return VipListPage(
-              title: "Medivia Things",
+              title: "Vip List",
               navigationBloc: navigationBloc,
               repository: repository,
             );

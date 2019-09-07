@@ -10,6 +10,11 @@ class VipList extends NavigationState {
   String toString() => "State: Show Vip List Page";
 }
 
+class BedmageList extends NavigationState {
+  @override
+  String toString() => "State: Show Bedmage List Page";
+}
+
 abstract class OnlineList extends NavigationState {
   final int server;
   OnlineList({@required this.server});

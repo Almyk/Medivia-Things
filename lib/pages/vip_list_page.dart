@@ -32,9 +32,12 @@ class VipListPage extends StatelessWidget {
               title: Text(title),
               actions: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(right: 10.0),
                   child: GestureDetector(
-                    child: Icon(Icons.add),
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                    ),
                     onTap: () =>
                         vipBottomSheet.mainBottomSheet(context, vipBloc),
                   ),
@@ -104,9 +107,10 @@ class VipBottomSheet {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-              left: 2.0,
-              right: 2.0,
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+            left: 2.0,
+            right: 2.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
           child: _addVipWidget(context, vipBloc),
         );
       },
@@ -279,13 +283,29 @@ class PlayerBottomSheet {
             );
           },
         ),
-        GestureDetector(
-          child: Icon(
-            Icons.close,
-            color: Colors.red,
-            size: 35.0,
-          ),
-          onTap: () => Navigator.pop(_context),
+        Row(
+          children: <Widget>[
+            GestureDetector(
+              child: Icon(
+                Icons.sync,
+                color: Colors.blue,
+                size: 35.0,
+              ),
+              onTap: () {
+                Navigator.pop(_context);
+                var repository = Repository();
+                repository.updateVipByName(player.name);
+              },
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.close,
+                color: Colors.red,
+                size: 35.0,
+              ),
+              onTap: () => Navigator.pop(_context),
+            ),
+          ],
         )
       ],
     );

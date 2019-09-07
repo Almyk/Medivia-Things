@@ -31,3 +31,8 @@ class ShowVipList extends NavigationEvent {
   @override
   String toString() => "Navigation: Show Vip List";
 }
+
+class ShowBedmageList extends NavigationEvent {
+  @override
+  String toString() => "Navigation: Show Bedmage List";
+}
