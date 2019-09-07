@@ -46,7 +46,8 @@ class Bedmage extends Equatable {
     };
   }
 
-  calculateTimeLeft(Player player) {
+  bool calculateTimeLeft(Player player) {
+    bool due = false;
     if (name != player.name) {
       // TODO delete bedmage
       name = player.name;
@@ -83,10 +84,12 @@ class Bedmage extends Equatable {
         timeLeft = 0;
         if (!notified) {
           // TODO create a notification
+          due = true;
         }
       }
     }
     // TODO add to DB here
+    return due;
   }
 
   int theoreticalLogoutTime(String lastLogin, int time) {

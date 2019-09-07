@@ -48,7 +48,7 @@ class Repository {
     onlineUpdateTimer =
         Timer.periodic(Duration(seconds: 30), (Timer t) => getOnlineLists());
     bedmageUpdateTimer =
-        Timer.periodic(Duration(minutes: 1), (Timer t) => updateBedmages());
+        Timer.periodic(Duration(seconds: 45), (Timer t) => updateBedmages());
   }
 
   Future initPreferences() async {
@@ -221,12 +221,21 @@ class Repository {
   }
 
   Future updateBedmages() async {
+    List<String> notificationList = [];
     for (final bedmage in bedmageList) {
       var response = await http
           .get(playerUrl + bedmage.name); // TODO make this call a method
       Map body = json.decode(response.body);
       var player = Player.fromMap(body);
-      bedmage.calculateTimeLeft(player);
+      var isDue = bedmage.calculateTimeLeft(player);
+
+      if (isDue) {
+        notificationList.add(bedmage.name);
+      }
+    }
+    if (notificationList.length > 0) {
+      String body = notificationList.join(", ");
+      notifications.bedmageDue(body);
     }
     bedmageBloc.dispatch(BedmagesUpdated());
   }
