@@ -83,8 +83,8 @@ class Bedmage extends Equatable {
       } else {
         timeLeft = 0;
         if (!notified) {
-          // TODO create a notification
           due = true;
+          notified = true;
         }
       }
     }
