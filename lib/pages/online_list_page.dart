@@ -47,21 +47,9 @@ class OnlineListPage extends StatelessWidget {
                   },
                 ),
               ],
-              title: Column(
-                children: <Widget>[
-                  Container(
-                    child: Text(title),
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
-                  ),
-                  Text(
-                    serverNames[server] +
-                        ' (${repository.onlineCounts[server].toString()})',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ],
+              title: Text(
+                serverNames[server] +
+                    ' (${repository.onlineCounts[server].toString()})',
               ),
             ),
             body:
@@ -142,10 +130,9 @@ class OnlineListPage extends StatelessWidget {
     scaffold.showSnackBar(
       SnackBar(
         content: Align(
-          alignment: Alignment.bottomCenter,
-          heightFactor: 1.0,
-          child: Text(text)
-          ),
+            alignment: Alignment.bottomCenter,
+            heightFactor: 1.0,
+            child: Text(text)),
         duration: Duration(seconds: 2),
       ),
     );
