@@ -23,7 +23,7 @@ class MyDrawer extends StatelessWidget {
             height: 80.0,
             child: DrawerHeader(
               child: Text(
-                'Medivia Things',
+                'ViP List for Medivia',
                 style: TextStyle(fontSize: 18.0),
               ),
               decoration: BoxDecoration(
