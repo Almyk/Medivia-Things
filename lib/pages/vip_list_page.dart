@@ -57,7 +57,7 @@ class VipListPage extends StatelessWidget {
       child: ListView.builder(
         itemCount: players.length,
         itemBuilder: (BuildContext context, int index) {
-          return _buildVipListItem(context, players[index]);
+          return SafeArea(child: _buildVipListItem(context, players[index]));
         },
       ),
     );
@@ -111,7 +111,7 @@ class VipBottomSheet {
             right: 2.0,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: _addVipWidget(context, vipBloc),
+          child: SafeArea(child: _addVipWidget(context, vipBloc)),
         );
       },
     );

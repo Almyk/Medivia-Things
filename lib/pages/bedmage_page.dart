@@ -43,8 +43,9 @@ class BedmagePage extends StatelessWidget {
           ),
           body: ListView.builder(
             itemCount: repository.bedmageList.length,
-            itemBuilder: (context, i) =>
-                _buildBedmageListItem(context, repository.bedmageList[i]),
+            itemBuilder: (context, i) => SafeArea(
+                child:
+                    _buildBedmageListItem(context, repository.bedmageList[i])),
           ),
         );
       },
@@ -96,7 +97,7 @@ class BedmageBottomSheet {
             right: 2.0,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: _addBedmageWidget(context, bedmageBloc),
+          child: SafeArea(child: _addBedmageWidget(context, bedmageBloc)),
         );
       },
     );
@@ -129,7 +130,8 @@ class BedmageBottomSheet {
           child: Text("ADD"),
           color: Theme.of(context).colorScheme.primaryVariant,
           onPressed: () {
-            (nameController.text.isNotEmpty && intervalController.text.isNotEmpty)
+            (nameController.text.isNotEmpty &&
+                    intervalController.text.isNotEmpty)
                 ? _addBedmage(context, bedmageBloc)
                 : Navigator.pop(context);
           },

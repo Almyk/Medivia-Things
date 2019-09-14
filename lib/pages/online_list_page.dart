@@ -52,8 +52,9 @@ class OnlineListPage extends StatelessWidget {
                     ' (${repository.onlineCounts[server].toString()})',
               ),
             ),
-            body:
-                _buildOnlineListItems(context, repository.onlineLists[server]));
+            body: SafeArea(
+                child: _buildOnlineListItems(
+                    context, repository.onlineLists[server])));
       },
     );
   }
