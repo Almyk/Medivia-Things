@@ -89,7 +89,8 @@ class MyApp extends StatelessWidget {
     final NavigationBloc navigationBloc =
         BlocProvider.of<NavigationBloc>(context);
     return MaterialApp(
-      title: 'Medivia Things',
+      debugShowCheckedModeBanner: false,
+      title: 'ViP List for Medivia',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
         scaffoldBackgroundColor: Colors.white,
@@ -100,7 +101,7 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, NavigationState state) {
           if (state is OnlineList) {
             return OnlineListPage(
-              title: "Medivia Things",
+              title: "Online List",
               server: state.server,
               navigationBloc: navigationBloc,
               repository: repository,
